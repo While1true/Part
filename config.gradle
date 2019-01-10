@@ -1,0 +1,90 @@
+ext {
+    isModule = false//业务组件单独运行或组合运行
+
+    isNeedGreenDao =false
+    isNeedDagger=false
+    isNeedEventBus=false
+
+    versions = [
+            applicationId           : "com.part",
+            versionCode             : 1,
+            versionName             : "1.0.0",
+
+            compileSdkVersion       : 27,
+            buildToolsVersion       : "27.0.3",
+            minSdkVersion           : 17,
+            targetSdkVersion        : 23,
+
+            supportSdkVersion       : "27.1.1",
+            constraintLayoutVersion : "1.1.1",
+            runnerVersion           : "1.0.1",
+            espressoVersion         : "3.0.1",
+            junitVersion            : "4.12",
+            annotationsVersion      : "24.0.0",
+
+            multiDexVersion         : "1.0.2",
+            butterKnifeVersion      : "8.4.0",
+            eventBusVersion         : "3.0.0",
+
+            arouterApiVersion       : "1.4.0",
+            arouterCompilerVersion  : "1.2.1",
+            arouterannotationVersion: "1.0.4",
+
+            loggerVersion           : "2.2.0",
+
+            rxjavaVersion           : "2.1.0",
+            rxandroidVersion        : "2.1.0",
+            retrofitVersion         : "2.4.0",
+            okHttpVersion           : "3.11.0",
+            daggerVersion           : "2.1.7",
+            greendaoVersion         : "3.2.2",
+            glideVersion            : "4.8.0",
+    ]
+
+    dependencies = [
+            "runner"              : "com.android.support.test:runner:${versions["runnerVersion"]}",
+            "espresso_core"       : "com.android.support.test.espresso:espresso-core:${versions["espressoVersion"]}",
+            "junit"               : "junit:junit:${versions["junitVersion"]}",
+            "support_annotations" : "com.android.support:support-annotations:${versions["annotationsVersion"]}",
+            "multidex"            : "com.android.support:multidex:${versions["multiDexVersion"]}",
+
+            "appcompat_v7"        : "com.android.support:appcompat-v7:${versions["supportSdkVersion"]}",
+            "constraint_layout"   : "com.android.support.constraint:constraint-layout:${versions["constraintLayoutVersion"]}",
+            "design"              : "com.android.support:design:${versions["supportSdkVersion"]}",
+            "support-v4"          : "com.android.support:support-v4:${versions["supportSdkVersion"]}",
+            "cardview-v7"         : "com.android.support:cardview-v7:${versions["supportSdkVersion"]}",
+            "recyclerview-v7"     : "com.android.support:recyclerview-v7:${versions["supportSdkVersion"]}",
+
+            //路由
+            "arouter_api"         : "com.alibaba:arouter-api:${versions["arouterApiVersion"]}",
+            "arouter_compiler"    : "com.alibaba:arouter-compiler:${versions["arouterCompilerVersion"]}",
+            "arouter_annotation"  : "com.alibaba:arouter-annotation:${versions["arouterannotationVersion"]}",
+
+            //黄油刀
+            "butterknife_compiler": "com.jakewharton:butterknife-compiler:${versions["butterKnifeVersion"]}",
+            "butterknife"         : "com.jakewharton:butterknife:${versions["butterKnifeVersion"]}",
+
+            //事件订阅
+            "eventbus"            : "org.greenrobot:eventbus:${versions["eventBusVersion"]}",
+
+            //日志
+            "logger"              : "com.orhanobut:logger:${versions["loggerVersion"]}",
+
+            "glide"               : "com.github.bumptech.glide:glide:${versions["glideVersion"]}",
+
+            //数据库
+            "greenDao"            : "org.greenrobot:greendao:${versions["greendaoVersion"]}",
+
+            'dagger'              : "com.google.dagger:dagger:${versions["daggerVersion"]}",
+            'daggerCompile'       : "com.google.dagger:dagger-compiler:${versions["daggerVersion"]}",
+
+            //RX网络
+            "okhttp"              : "com.squareup.okhttp3:okhttp:${versions["okHttpVersion"]}",
+            "okhttploggerIntecept": "com.squareup.okhttp3:logging-interceptor:${versions["okHttpVersion"]}",
+            "retrofit"            : "com.squareup.retrofit2:retrofit:${versions["retrofitVersion"]}",
+            "retrofitConvert"     : "com.squareup.retrofit2:converter-gson:${versions["retrofitVersion"]}",
+            "retrofitAdapt"       : "com.squareup.retrofit2:adapter-rxjava2:${versions["retrofitVersion"]}",
+            "rxjava"              : "io.reactivex.rxjava2:rxjava:${versions["rxjavaVersion"]}",
+            "rxAndroid"           : "io.reactivex.rxjava2:rxandroid:${versions["rxandroidVersion"]}",
+    ]
+}
