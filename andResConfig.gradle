@@ -1,0 +1,55 @@
+apply plugin: 'AndResGuard'
+andResGuard {
+    // mappingFile = file("./resource_mapping.txt")
+    mappingFile = null
+    use7zip = true
+    useSign = true
+    // 打开这个开关，会keep住所有资源的原始路径，只混淆资源的名字
+    keepRoot = false
+    whiteList = [
+            "R.anim.umeng*",
+            "R.string.umeng*",
+            "R.string.UM*",
+            "R.string.tb_*",
+            "R.layout.umeng*",
+            "R.layout.socialize_*",
+            "R.layout.*messager*",
+            "R.layout.tb_*",
+            "R.color.umeng*",
+            "R.color.tb_*",
+            "R.style.*UM*",
+            "R.style.umeng*",
+            "R.drawable.umeng*",
+            "R.drawable.tb_*",
+            "R.drawable.sina*",
+            "R.drawable.qq_*",
+            "R.drawable.tb_*",
+            "R.id.umeng*",
+            "R.id.*messager*",
+            "R.id.progress_bar_parent",
+            "R.id.socialize_*",
+            "R.id.webView",
+            "R.drawable.jpush_notification_icon"
+    ]
+    compressFilePattern = [
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+    ]
+    sevenzip {
+        artifact = 'com.tencent.mm:SevenZip:1.2.15'
+        //path = "/usr/local/bin/7za"
+    }
+
+    /**
+     * 可选： 如果不设置则会默认覆盖assemble输出的apk
+     **/
+    // finalApkBackupPath = "${project.rootDir}/final.apk"
+
+    /**
+     * 可选: 指定v1签名时生成jar文件的摘要算法
+     * 默认值为“SHA-1”
+     **/
+    // digestalg = "SHA-256"
+}

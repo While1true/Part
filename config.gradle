@@ -1,9 +1,16 @@
 ext {
-    isModule = false//业务组件单独运行或组合运行
+    isModule = true//业务组件单独运行或组合运行
 
-    isNeedGreenDao =false
-    isNeedDagger=false
-    isNeedEventBus=false
+    isNeedGreenDao = false
+    isNeedDagger = false
+    isNeedEventBus = false
+
+    sign = [
+            keyAlias     : "123",
+            keyPassword  : "123456",
+            storeFile    : file('./key/key.jks'),
+            storePassword: "123456",
+    ]
 
     versions = [
             applicationId           : "com.part",
