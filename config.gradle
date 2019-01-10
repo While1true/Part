@@ -1,5 +1,5 @@
 ext {
-    isModule = true//业务组件单独运行或组合运行
+    isModule = false//业务组件单独运行或组合运行
 
     isNeedGreenDao = false
     isNeedDagger = false
