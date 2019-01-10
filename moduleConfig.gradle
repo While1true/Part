@@ -36,14 +36,6 @@ android {
                             buildType.name + ".apk")
                 }
         }
-        buildTypes {
-            release {
-                minifyEnabled true //混淆编译
-                shrinkResources true //移除无用资源
-                zipAlignEnabled true //zipalign优化
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            }
-        }
     }
     //java插件引入了一个概念叫做SourceSets，通过修改SourceSets中的属性，可以指定哪些源文件
     //（ 或文件夹下的源文件 ） 要被编译 ， 哪些源文件要被排除 。
