@@ -74,6 +74,7 @@ dependencies {
 
     //图片加载
     api rootProject.ext.dependencies["glide"]
+    api rootProject.ext.dependencies["glide_okhttp"]
     //GreenDao
     if (rootProject.ext.isNeedGreenDao.toBoolean()) {
         api rootProject.ext.dependencies["greenDao"]
