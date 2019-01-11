@@ -2,7 +2,7 @@ ext {
     isModule = false//业务组件单独运行或组合运行
 
     isNeedGreenDao = false
-    isNeedDagger = false
+    isNeedDagger = true
     isNeedEventBus = false
 
     sign = [
@@ -43,7 +43,7 @@ ext {
             rxandroidVersion        : "2.1.0",
             retrofitVersion         : "2.4.0",
             okHttpVersion           : "3.11.0",
-            daggerVersion           : "2.1.7",
+            daggerVersion           : "2.17",
             greendaoVersion         : "3.2.2",
             glideVersion            : "4.8.0",
     ]

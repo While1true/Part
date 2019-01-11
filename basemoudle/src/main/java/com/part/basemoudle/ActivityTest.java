@@ -1,18 +1,49 @@
 package com.part.basemoudle;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
+import com.part.common.ui.activity.BaseMvpActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * by ckckck 2019/1/10
  * <p>
  * life is short , bugs are too many!
  */
-public class ActivityTest extends AppCompatActivity {
+public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
+
+
+    @BindView(R2.id.xxx_textview)
+    TextView xxxTextview;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+    protected void initData(Bundle savedInstanceState) {
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content,new TestFragment()).commit();
+    }
+
+    @Override
+    protected void initView() {
+        ButterKnife.bind(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.xxx_test;
+    }
+
+    @Override
+    protected void injectComponent() {
+        DaggerTestComponent.builder().activityComponent(activityComponent)
+                .testModule(new TestModule(this))
+                .build().inject(this);
+    }
+
+    @OnClick(R2.id.xxx_textview)
+    public void onViewClicked() {
+        showLoading();
     }
 }
