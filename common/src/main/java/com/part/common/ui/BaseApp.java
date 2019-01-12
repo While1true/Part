@@ -3,6 +3,7 @@ package com.part.common.ui;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.widget.NestedScrollView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -11,6 +12,10 @@ import com.part.common.BuildConfig;
 import com.part.common.Util.AppContext;
 import com.part.common.Util.AutoScreenUtils;
 import com.part.common.Util.ToastUtil;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.statistics.common.DeviceConfig;
+
+import cn.jpush.android.api.JPushInterface;
 
 
 /**
@@ -38,7 +43,11 @@ public abstract class BaseApp extends Application {
             AutoScreenUtils.AdjustDensity(this);
             ToastUtil.init();
 
+            UMConfigure.init(this,BuildConfig.UMengKey,BuildConfig.UMengChannel , UMConfigure.DEVICE_TYPE_PHONE, null);
+            UMConfigure.setLogEnabled(BuildConfig.DEBUG);
 
+            JPushInterface.setDebugMode(BuildConfig.DEBUG);
+            JPushInterface.init(this);
             init();
 
         }

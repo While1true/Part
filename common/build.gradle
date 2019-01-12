@@ -13,6 +13,9 @@ android {
         //MultiDex分包方法
         multiDexEnabled true
 
+        buildConfigField  'String','UMengKey',String.valueOf(rootProject.ext.keys["uMengkey"])
+        buildConfigField  'String','UMengChannel',String.valueOf(rootProject.ext.keys["uMengChannel"])
+
         //Arouter路由配置
         javaCompileOptions {
             annotationProcessorOptions {
@@ -24,7 +27,7 @@ android {
     }
 
     buildTypes {
-        release {
+            release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -33,6 +36,8 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+
+
 }
 
 dependencies {
@@ -84,4 +89,11 @@ dependencies {
         api rootProject.ext.dependencies["dagger"]
         annotationProcessor rootProject.ext.dependencies["daggerCompile"]
     }
+    //友盟
+    api rootProject.ext.dependencies["uMeng"]
+    api rootProject.ext.dependencies["uMengCommon"]
+
+    //极光推送
+    api rootProject.ext.dependencies["jpush"]
+    api rootProject.ext.dependencies["jpushCore"]
 }

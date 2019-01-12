@@ -15,7 +15,7 @@ import android.view.ViewGroup;
  */
 public abstract class BaseFragment extends Fragment {
     protected View rootView;
-
+    private boolean isVisibleToUser, isfirst = true, isViewCreated;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +33,28 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
+        isViewCreated = true;
+        if (isVisibleToUser && isfirst) {
+            isfirst = false;
+            loadLazy();
+        }
         initData(savedInstanceState);
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser;
+        if (isfirst && isVisibleToUser && isViewCreated) {
+            isfirst = false;
+            loadLazy();
+        }
+    }
+
+    protected void loadLazy() {
+
+    }
     protected abstract void initInjection();
 
     protected abstract void initData(Bundle savedInstanceState);

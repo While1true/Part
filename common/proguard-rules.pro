@@ -19,3 +19,19 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+    -keep class com.umeng.** {*;}
+    -keepclassmembers class * {
+       public <init> (org.json.JSONObject);
+    }
+    -keepclassmembers enum * {
+        public static **[] values();
+        public static ** valueOf(java.lang.String);
+    }
+
+    -dontwarn cn.jpush.**
+    -keep class cn.jpush.** { *; }
+    -keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
+
+    -dontwarn cn.jiguang.**
+    -keep class cn.jiguang.** { *; }

@@ -71,7 +71,7 @@ public class EmptyHeaderFooter extends View implements Refreshable {
 
     @Override
     public int canPullSpace() {
-        return SizeUtil.dp2px(getContext(),50);
+        return SizeUtil.dp2px(getContext(),200);
     }
 
     @Override

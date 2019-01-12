@@ -17,12 +17,12 @@ ext {
             versionCode             : 1,
             versionName             : "1.0.0",
 
-            compileSdkVersion       : 27,
-            buildToolsVersion       : "27.0.3",
+            compileSdkVersion       : 28,
+            buildToolsVersion       : "28.0.0",
             minSdkVersion           : 17,
             targetSdkVersion        : 23,
 
-            supportSdkVersion       : "27.1.1",
+            supportSdkVersion       : "28.0.0",
             constraintLayoutVersion : "1.1.1",
             runnerVersion           : "1.0.1",
             espressoVersion         : "3.0.1",
@@ -46,8 +46,21 @@ ext {
             daggerVersion           : "2.17",
             greendaoVersion         : "3.2.2",
             glideVersion            : "4.8.0",
+
+            uMengVersion            : "8.0.0",
+            uMengCommonVersion      : "2.0.0",
+
+            jPush      : "3.1.6",
+            jPushCore      : "1.2.5",
     ]
 
+    keys = [
+            uMengkey: '"5c395001b465f52f22000680"',//TODO
+            uMengChannel: '"测试"',//TODO
+
+            jPushKey:"e7e1e1202b7f406ac609d377",//TODO
+            jPushChannel:"测试",//TODO
+    ]
     dependencies = [
             "runner"              : "com.android.support.test:runner:${versions["runnerVersion"]}",
             "espresso_core"       : "com.android.support.test.espresso:espresso-core:${versions["espressoVersion"]}",
@@ -94,5 +107,13 @@ ext {
             "retrofitAdapt"       : "com.squareup.retrofit2:adapter-rxjava2:${versions["retrofitVersion"]}",
             "rxjava"              : "io.reactivex.rxjava2:rxjava:${versions["rxjavaVersion"]}",
             "rxAndroid"           : "io.reactivex.rxjava2:rxandroid:${versions["rxandroidVersion"]}",
+
+            //友盟
+            "uMeng"               : "com.umeng.umsdk:analytics:${versions["uMengVersion"]}",
+            "uMengCommon"               : "com.umeng.umsdk:common:${versions["uMengCommonVersion"]}",
+
+            //极光推送
+            "jpush":"cn.jiguang.sdk:jpush:${versions["jPush"]}",
+            "jpushCore":"cn.jiguang.sdk:jcore:${versions["jPushCore"]}",
     ]
 }

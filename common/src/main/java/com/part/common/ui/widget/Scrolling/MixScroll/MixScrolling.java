@@ -302,6 +302,10 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         return footer;
     }
 
+    public View getScrollContent() {
+        return scrollContent;
+    }
+
     void setRefreshState(RefreshState refreshState) {
         this.refreshState = refreshState;
         for (OnScrollStateListener listener : listeners) {

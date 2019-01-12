@@ -6,12 +6,14 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild2;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewParent;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
@@ -25,14 +27,15 @@ import static android.support.v4.widget.ViewDragHelper.INVALID_POINTER;
  * life is short , bugs are too many!
  */
 public abstract class Scrolling extends FrameLayout implements NestedScrollingChild2 {
-    public static final String TAG="Scrolling";
+    public static final String TAG = "Scrolling";
     private static final int SCROLL_STAT_IDLE = 0;
     private static final int SCROLL_STAT_SCROLLING = 1;
 
     private NestedScrollingChildHelper mChildHelper;
-    private int[] mScrollConsumed = new int[2];
-    private int[] mScrollOffset = new int[2];
-    private int[] mInterralScrollOffset = new int[2];
+    private final int[] mScrollOffset = new int[2];
+    private final int[] mScrollConsumed = new int[2];
+    private final int[] mNestedOffsets = new int[2];
+    private final int[] mInterralScrollOffset = new int[2];
 
     private VelocityTracker mVelocityTracker;
     private ViewFlinger mViewFlinger = new ViewFlinger();
@@ -44,8 +47,10 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
     private int mMaxFlingVelocity;
     private int mMinFlingVelocity;
     private int mTouchSlop;
-    private float mLastX;
-    private float mLastY;
+    private int mInitialTouchX;
+    private int mInitialTouchY;
+    private int mLastX;
+    private int mLastY;
     private boolean mIsDraging;
     private int mActivePointerId = INVALID_POINTER;
 
@@ -73,38 +78,27 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        final int action = MotionEventCompat.getActionMasked(ev);
-
-        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
-            mIsDraging = false;
-            return false;
+        final int action = ev.getActionMasked();
+        final int actionIndex = ev.getActionIndex();
+        System.out.println(action+"--"+mIsDraging);
+        if ((action == MotionEvent.ACTION_MOVE) && mIsDraging) {
+            return true;
         }
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
         mVelocityTracker.addMovement(ev);
-        switch (action & MotionEvent.ACTION_MASK) {
+        switch (action) {
             case MotionEvent.ACTION_MOVE: {
-                if (mIsDraging) {
-                    return true;
-                }
-                final int activePointerId = mActivePointerId;
-                if (activePointerId == INVALID_POINTER) {
+                final int index = ev.findPointerIndex(mActivePointerId);
+                if (index < 0) {
                     // If we don't have a valid id, the touch down wasn't on content.
-                    break;
+                    return false;
                 }
-                final int pointerIndex = ev.findPointerIndex(activePointerId);
-                if (pointerIndex == -1) {
-                    Log.e(TAG, "Invalid pointerId=" + activePointerId
-                            + " in onInterceptTouchEvent");
-                    break;
-                }
-                if (direction == ScrollDirection.XY) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                    return true;
-                } else {
-                    float dx = ev.getX(pointerIndex);
-                    float dy = ev.getY(pointerIndex);
+
+                if (!mIsDraging) {
+                    int dx = (int) (ev.getX(index)+0.5f);
+                    int dy = (int) (ev.getY(index)+0.5f);
                     float absY = Math.abs(mLastY - dy);
                     float absX = Math.abs(mLastX - dx);
                     float offset = direction == ScrollDirection.Y ? absY : absX;
@@ -112,22 +106,31 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                         // Start scrolling!
                         mLastX = dx;
                         mLastY = dy;
+                        mIsDraging=true;
                         getParent().requestDisallowInterceptTouchEvent(true);
-                        return true;
                     }
                 }
                 break;
             }
+            case MotionEvent.ACTION_POINTER_DOWN:
+                mActivePointerId = ev.getPointerId(actionIndex);
+                mInitialTouchX = mLastX = (int) (ev.getX(actionIndex) + 0.5f);
+                mInitialTouchY = mLastY = (int) (ev.getY(actionIndex) + 0.5f);
+                break;
             case MotionEvent.ACTION_DOWN:
                 if (getScrollState() == SCROLL_STAT_SCROLLING) {
                     stopScroll();
                 }
+                mIsDraging = false;
+                // Clear the nested offsets
+                mNestedOffsets[0] = mNestedOffsets[1] = 0;
                 mActivePointerId = ev.getPointerId(0);
-                mLastX = ev.getX();
-                mLastY = ev.getY();
+                mLastX = (int) (ev.getX() + 0.5f);
+                mLastY = (int) (ev.getY() + 0.5f);
                 startNestedScroll(getAxis(), TYPE_TOUCH);
                 break;
             case MotionEvent.ACTION_UP: {
+                mIsDraging = false;
                 mActivePointerId = INVALID_POINTER;
                 mVelocityTracker.clear();
                 stopNestedScroll(TYPE_TOUCH);
@@ -137,133 +140,150 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
             case MotionEvent.ACTION_CANCEL: {
                 mActivePointerId = INVALID_POINTER;
                 mVelocityTracker.clear();
+                mIsDraging = false;
                 stopNestedScroll(TYPE_TOUCH);
                 setScrollState(SCROLL_STAT_IDLE);
             }
             case MotionEvent.ACTION_POINTER_UP:
-                onSecondaryPointerUp(ev);
+                onPointerUp(ev);
                 break;
         }
-        return false;
+        return mIsDraging;
     }
 
-    private void onSecondaryPointerUp(MotionEvent ev) {
-        final int pointerIndex = ev.getActionIndex();
-        final int pointerId = ev.getPointerId(pointerIndex);
-        if (pointerId == mActivePointerId) {
-            // This was our active pointer going up. Choose a new
-            // active pointer and adjust accordingly.
-            // TODO: Make this decision more intelligent.
-            final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mLastX = (int) ev.getX(newPointerIndex);
-            mLastY = (int) ev.getY(newPointerIndex);
-            mActivePointerId = ev.getPointerId(newPointerIndex);
-            if (mVelocityTracker != null) {
-                mVelocityTracker.clear();
-            }
+    private void onPointerUp(MotionEvent e) {
+        final int actionIndex = e.getActionIndex();
+        if (e.getPointerId(actionIndex) == mActivePointerId) {
+            // Pick a new pointer to pick up the slack.
+            final int newIndex = actionIndex == 0 ? 1 : 0;
+            mActivePointerId = e.getPointerId(newIndex);
+            mInitialTouchX = mLastX = (int) (e.getX(newIndex) + 0.5f);
+            mInitialTouchY = mLastY = (int) (e.getY(newIndex) + 0.5f);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        MotionEvent event = MotionEvent.obtain(ev);
-        final int action = MotionEventCompat.getActionMasked(event);
+        final MotionEvent vtev = MotionEvent.obtain(ev);
+        final int action = ev.getActionMasked();
+        final int actionIndex = ev.getActionIndex();
+
+        if (action == MotionEvent.ACTION_DOWN) {
+            mNestedOffsets[0] = mNestedOffsets[1] = 0;
+        }
+        vtev.offsetLocation(mNestedOffsets[0], mNestedOffsets[1]);
         boolean eventAddedToVelocityTracker = false;
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
+        boolean canScrollHorizontally = (direction == ScrollDirection.X) || (direction == ScrollDirection.XY);
+        boolean canScrollVertically = (direction == ScrollDirection.Y) || (direction == ScrollDirection.XY);
         switch (action) {
             case MotionEvent.ACTION_MOVE:
-                if (!mIsDraging) {
-                    mIsDraging = true;
-                }
-                final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
-                if (activePointerIndex == -1) {
-                    Log.e(TAG, "Invalid pointerId=" + mActivePointerId + " in onTouchEvent");
-                    break;
+                final int index = ev.findPointerIndex(mActivePointerId);
+                if (index < 0) {
+                    Log.e(TAG, "Error processing scroll; pointer index for id "
+                            + mActivePointerId + " not found. Did any MotionEvents get skipped?");
+                    return false;
                 }
 
-                final int eventX = (int) ev.getX(activePointerIndex);
-                final int eventY = (int) ev.getY(activePointerIndex);
-                int deltaX = (int) (mLastX - eventX + 0.5f);
-                int deltaY = (int) (mLastY - eventY + 0.5f);
-                mLastX = eventX;
-                mLastY = eventY;
+                final int x = (int) (ev.getX(index) + 0.5f);
+                final int y = (int) (ev.getY(index) + 0.5f);
+                int dx = mLastX - x;
+                int dy = mLastY - y;
+
+                final int initdx=dx;
+                final int initdy=dy;
+
                 // nested pre scroll
-                if (dispatchNestedPreScroll(direction == ScrollDirection.Y ? 0 : deltaX, direction == ScrollDirection.X ? 0 : deltaY, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
-                    deltaX -= mScrollConsumed[0];
-                    deltaY -= mScrollConsumed[1];
-                    event.offsetLocation(-mScrollOffset[0], -mScrollOffset[1]);
+                if (dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
+                    dx -= mScrollConsumed[0];
+                    dy -= mScrollConsumed[1];
+                    vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
+                    // Updated the nested offsets
+                    mNestedOffsets[0] += mScrollOffset[0];
+                    mNestedOffsets[1] += mScrollOffset[1];
+                }
+                if (!mIsDraging) {
+                    if (canScrollHorizontally && Math.abs(dx) > mTouchSlop) {
+                        if (dx > 0) {
+                            dx -= mTouchSlop;
+                        } else {
+                            dx += mTouchSlop;
+                        }
+                        mIsDraging = true;
+                    }
+                    if (canScrollVertically && Math.abs(dy) > mTouchSlop) {
+                        if (dy > 0) {
+                            dy -= mTouchSlop;
+                        } else {
+                            dy += mTouchSlop;
+                        }
+                        mIsDraging = true;
+                    }
+                }
+                if (mIsDraging) {
+                    mLastX = x - mScrollOffset[0];
+                    mLastY = y - mScrollOffset[1];
                 }
 
                 // internal scroll
                 mInterralScrollOffset[0] = 0;
                 mInterralScrollOffset[1] = 0;
-                if (direction == ScrollDirection.Y) {
-                    scrollXY(0, deltaY, mInterralScrollOffset, false);
-                } else if (direction == ScrollDirection.X) {
-                    scrollXY(deltaX, 0, mInterralScrollOffset, false);
-                } else {
-                    scrollXY(deltaX, deltaY, mInterralScrollOffset, false);
+                scrollXY(dx, dy, mInterralScrollOffset, false);
+
+                dx -= mInterralScrollOffset[0];
+                dy -= mInterralScrollOffset[1];
+                if (dispatchNestedScroll(initdx-dx, initdy-dy, dx,dy,mScrollOffset, ViewCompat.TYPE_TOUCH)) {
+                    mLastX -= mScrollOffset[0];
+                    mLastY -= mScrollOffset[1];
+                    vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
+                    mNestedOffsets[0] += mScrollOffset[0];
+                    mNestedOffsets[1] += mScrollOffset[1];
                 }
-                deltaX -= mInterralScrollOffset[0];
-                deltaY -= mInterralScrollOffset[1];
-                if (direction == ScrollDirection.Y) {
-                    if (deltaY != 0) {
-                        dispatchNestedScroll(0, mScrollConsumed[1] + mInterralScrollOffset[1], 0, deltaY, mScrollOffset, ViewCompat.TYPE_TOUCH);
-                    }
-                } else if (direction == ScrollDirection.X) {
-                    if (deltaX != 0) {
-                        dispatchNestedScroll(mScrollConsumed[0] + mInterralScrollOffset[0], 0, deltaX, 0, mScrollOffset, ViewCompat.TYPE_TOUCH);
-                    }
-                } else {
-                    dispatchNestedScroll(mScrollConsumed[0] + mInterralScrollOffset[0], mScrollConsumed[1] + mInterralScrollOffset[1], deltaX, deltaY, mScrollOffset, ViewCompat.TYPE_TOUCH);
+                if (mInterralScrollOffset[0] != 0 && mInterralScrollOffset[1] != 0) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
                 }
-                event.offsetLocation(-mScrollOffset[0], -mScrollOffset[1]);
                 break;
             case MotionEvent.ACTION_DOWN:
                 if (getScrollState() == SCROLL_STAT_SCROLLING) {
                     stopScroll();
                 }
-                mLastX = (int) ev.getX();
-                mLastY = (int) ev.getY();
+                mActivePointerId = ev.getPointerId(0);
+                mInitialTouchX = mLastX = (int) (ev.getX() + 0.5f);
+                mInitialTouchY = mLastY = (int) (ev.getY() + 0.5f);
                 mActivePointerId = ev.getPointerId(0);
                 startNestedScroll(getAxis(), TYPE_TOUCH);
                 break;
             case MotionEvent.ACTION_UP:
                 mActivePointerId = INVALID_POINTER;
                 eventAddedToVelocityTracker = true;
-                mVelocityTracker.addMovement(event);
+                mVelocityTracker.addMovement(vtev);
                 mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
                 onFlingXY(direction == ScrollDirection.Y ? 0 : (int) -mVelocityTracker.getXVelocity(), direction == ScrollDirection.X ? 0 : (int) -mVelocityTracker.getYVelocity());
                 mVelocityTracker.clear();
-                mIsDraging = false;
                 stopNestedScroll(ViewCompat.TYPE_TOUCH);
                 break;
             case MotionEvent.ACTION_CANCEL:
                 mActivePointerId = INVALID_POINTER;
                 mVelocityTracker.clear();
-                mIsDraging = false;
                 stopNestedScroll(ViewCompat.TYPE_TOUCH);
                 setScrollState(SCROLL_STAT_IDLE);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: {
-                final int index = ev.getActionIndex();
-                mLastX = (int) ev.getX(index);
-                mLastY = (int) ev.getY(index);
-                mActivePointerId = ev.getPointerId(index);
+                mActivePointerId = ev.getPointerId(actionIndex);
+                mInitialTouchX = mLastX = (int) (ev.getX(actionIndex) + 0.5f);
+                mInitialTouchY = mLastY = (int) (ev.getY(actionIndex) + 0.5f);
                 break;
             }
             case MotionEvent.ACTION_POINTER_UP:
-                onSecondaryPointerUp(ev);
-                mLastX = (int) ev.getX(ev.findPointerIndex(mActivePointerId));
-                mLastY = (int) ev.getY(ev.findPointerIndex(mActivePointerId));
+                onPointerUp(ev);
                 break;
         }
         if (!eventAddedToVelocityTracker) {
-            mVelocityTracker.addMovement(event);
+            mVelocityTracker.addMovement(vtev);
         }
-        event.recycle();
+        vtev.recycle();
         return true;
     }
 
@@ -372,7 +392,6 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
     }
 
 
-
     class ViewFlinger implements Runnable {
         private int mLastY = 0;
         private int mLastX = 0;
@@ -436,7 +455,8 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
     /**
      * fling 没被停止的完成
      */
-    protected void onFlingFinished(){}
+    protected void onFlingFinished() {
+    }
 
     public ScrollDirection getDirection() {
         return direction;

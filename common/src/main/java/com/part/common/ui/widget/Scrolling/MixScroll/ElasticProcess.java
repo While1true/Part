@@ -1,5 +1,6 @@
 package com.part.common.ui.widget.Scrolling.MixScroll;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.IScrollProcess;
@@ -24,7 +25,7 @@ public class ElasticProcess implements IScrollProcess {
 
     @Override
     public final void onHeader(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling, boolean y) {
-        if (!isSupportFling&&fling) {
+        if (!isSupportFling && fling) {
             return;
         }
         if (y) {
@@ -36,7 +37,7 @@ public class ElasticProcess implements IScrollProcess {
 
     @Override
     public final void onFootor(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling, boolean y) {
-        if (!isSupportFling&&fling) {
+        if (!isSupportFling && fling) {
             return;
         }
         if (y) {
@@ -48,12 +49,12 @@ public class ElasticProcess implements IScrollProcess {
 
     @Override
     public Refreshable getHeader(ViewGroup group) {
-        return new EmptyHeaderFooter(group.getContext(),true);
+        return new EmptyHeaderFooter(group.getContext(), true);
     }
 
     @Override
     public Refreshable getFooter(ViewGroup group) {
-        return new EmptyHeaderFooter(group.getContext(),false);
+        return new EmptyHeaderFooter(group.getContext(), false);
     }
 
 
@@ -61,7 +62,9 @@ public class ElasticProcess implements IScrollProcess {
         int scrollY = mixScrolling.getScrollYY();
         float strength = mixScrolling.getStrength();
         Refreshable header = mixScrolling.getHeader();
+        View scrollContent = mixScrolling.getScrollContent();
         int canPullSpace = header.canPullSpace();
+
         //下滑
         if (remain < 0) {
             canPullSpace = Math.max(0, canPullSpace + scrollY);
@@ -71,10 +74,11 @@ public class ElasticProcess implements IScrollProcess {
                 scrolledXY[1] -= min * strength;
                 mixScrolling.scrollBy(0, (int) -min);
 
-                scrollY= mixScrolling.getScrollYY();
-                mixScrolling.setPivotX(0);
-                mixScrolling.setPivotY(0);
-                mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(-scrollY)/ (float) header.canPullSpace()));
+                scrollY = mixScrolling.getScrollYY();
+                scrollContent.setPivotX(0);
+                scrollContent.setPivotY(0);
+                System.out.println(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
+                scrollContent.setScaleY(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
             } else {
                 if (fling) {
                     mixScrolling.stopScroll();
@@ -82,14 +86,14 @@ public class ElasticProcess implements IScrollProcess {
                 }
             }
         } else {
-            int min = Math.min(-scrollY, remain);
-            mixScrolling.scrollBy(0, min);
-            scrolledXY[1] += min;
+            float min = Math.min(-scrollY, remain / strength);
+            mixScrolling.scrollBy(0, (int) min);
+            scrolledXY[1] += min * strength;
 
-            scrollY= mixScrolling.getScrollYY();
-            mixScrolling.setPivotX(0);
-            mixScrolling.setPivotY(0);
-            mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(-scrollY)/ (float) header.canPullSpace()));
+            scrollY = mixScrolling.getScrollYY();
+            scrollContent.setPivotX(0);
+            scrollContent.setPivotY(0);
+            scrollContent.setScaleY(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
         }
 
     }
@@ -98,6 +102,7 @@ public class ElasticProcess implements IScrollProcess {
         int scrollX = mixScrolling.getScrollXX();
         float strength = mixScrolling.getStrength();
         Refreshable header = mixScrolling.getHeader();
+        View scrollContent = mixScrolling.getScrollContent();
         int canPullSpace = header.canPullSpace();
         //下滑
         if (remain < 0) {
@@ -108,10 +113,10 @@ public class ElasticProcess implements IScrollProcess {
                 mixScrolling.scrollBy(-(int) min, 0);
                 scrolledXY[0] -= min * strength;
 
-                scrollX= mixScrolling.getScrollXX();
-                mixScrolling.setPivotX(0);
-                mixScrolling.setPivotY(0);
-                mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(-scrollX)/ (float) header.canPullSpace()));
+                scrollX = mixScrolling.getScrollXX();
+                scrollContent.setPivotX(0);
+                scrollContent.setPivotY(0);
+                scrollContent.setScaleX(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollX), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredWidth()/2));
 
             } else {
                 if (fling) {
@@ -120,14 +125,14 @@ public class ElasticProcess implements IScrollProcess {
                 }
             }
         } else {
-            int min = Math.min(-scrollX, remain);
-            mixScrolling.scrollBy(min, 0);
-            scrolledXY[0] += min;
+            float min = Math.min(-scrollX, remain / strength);
+            mixScrolling.scrollBy((int) min, 0);
+            scrolledXY[0] += min * strength;
 
-            scrollX= mixScrolling.getScrollXX();
-            mixScrolling.setPivotX(0);
-            mixScrolling.setPivotY(0);
-            mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(-scrollX)/ (float) header.canPullSpace()));
+            scrollX = mixScrolling.getScrollXX();
+            scrollContent.setPivotX(0);
+            scrollContent.setPivotY(0);
+            scrollContent.setScaleX(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollX), mixScrolling.getMeasuredWidth()/2) / mixScrolling.getMeasuredWidth()/2));
 
         }
     }
@@ -136,17 +141,19 @@ public class ElasticProcess implements IScrollProcess {
         int scrollY = mixScrolling.getScrollYY();
         float strength = mixScrolling.getStrength();
         Refreshable footer = mixScrolling.getFooter();
+        View scrollContent = mixScrolling.getScrollContent();
         int canPullSpace = footer.canPullSpace();
+
         //下滑
         if (remain < 0) {
-            int min = Math.min(scrollY, -remain);
-            mixScrolling.scrollBy(0, -min);
-            scrolledXY[1] -= min;
+            float min = Math.min(scrollY, -remain / strength);
+            mixScrolling.scrollBy(0, (int) -min);
+            scrolledXY[1] -= min * strength;
 
-            scrollY= mixScrolling.getScrollYY();
-            mixScrolling.setPivotX(0);
-            mixScrolling.setPivotY(mixScrolling.getMeasuredHeight());
-            mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(scrollY)/ (float) footer.canPullSpace()));
+            scrollY = mixScrolling.getScrollYY();
+            scrollContent.setPivotX(0);
+            scrollContent.setPivotY(scrollContent.getMeasuredHeight());
+            scrollContent.setScaleY(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
 
         } else {
             canPullSpace = Math.max(0, canPullSpace - scrollY);
@@ -156,10 +163,11 @@ public class ElasticProcess implements IScrollProcess {
                 mixScrolling.scrollBy(0, (int) min);
                 scrolledXY[1] += min * strength;
 
-                scrollY= mixScrolling.getScrollYY();
-                mixScrolling.setPivotX(0);
-                mixScrolling.setPivotY(mixScrolling.getMeasuredHeight());
-                mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(scrollY)/ (float) footer.canPullSpace()));
+                scrollY = mixScrolling.getScrollYY();
+                scrollContent.setPivotX(0);
+                scrollContent.setPivotY(scrollContent.getMeasuredHeight());
+                scrollContent.setScaleY(1.2f);
+                scrollContent.setScaleY(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
             } else {
                 if (fling) {
                     mixScrolling.stopScroll();
@@ -174,17 +182,18 @@ public class ElasticProcess implements IScrollProcess {
         int scrollX = mixScrolling.getScrollXX();
         float strength = mixScrolling.getStrength();
         Refreshable footer = mixScrolling.getFooter();
+        View scrollContent = mixScrolling.getScrollContent();
         int canPullSpace = footer.canPullSpace();
         //下滑
         if (remain < 0) {
-            int min = Math.min(scrollX, -remain);
-            mixScrolling.scrollBy(-min, 0);
-            scrolledXY[0] -= min;
+            float min = Math.min(scrollX, -remain / strength);
+            mixScrolling.scrollBy((int) -min, 0);
+            scrolledXY[0] -= min * strength;
 
-            scrollX= mixScrolling.getScrollXX();
-            mixScrolling.setPivotX(0);
-            mixScrolling.setPivotY(mixScrolling.getMeasuredHeight());
-            mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(scrollX)/ (float) footer.canPullSpace()));
+            scrollX = mixScrolling.getScrollXX();
+            scrollContent.setPivotX(scrollContent.getMeasuredWidth());
+            scrollContent.setPivotY(0);
+            scrollContent.setScaleX(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollX), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredWidth()/2));
 
         } else {
             canPullSpace = Math.max(0, canPullSpace - scrollX);
@@ -194,10 +203,10 @@ public class ElasticProcess implements IScrollProcess {
                 mixScrolling.scrollBy((int) min, 0);
                 scrolledXY[0] += min * strength;
 
-                scrollX= mixScrolling.getScrollXX();
-                mixScrolling.setPivotX(0);
-                mixScrolling.setPivotY(mixScrolling.getMeasuredHeight());
-                mixScrolling.setScaleY((float) Math.min(1.5f, 1f +Math.sqrt(scrollX)/ (float) footer.canPullSpace()));
+                scrollX = mixScrolling.getScrollXX();
+                scrollContent.setPivotX(scrollContent.getMeasuredWidth());
+                scrollContent.setPivotY(0);
+                scrollContent.setScaleX(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollX), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredWidth()/2));
 
             } else {
                 if (fling) {
@@ -219,20 +228,19 @@ public class ElasticProcess implements IScrollProcess {
      * @param base
      * @return
      */
-    private int caculateZhangli(int current, int base) {
+    private float caculateZhangli(int current, int base) {
         float signum = Math.signum(current);
         int pullrate = Math.abs(current) / base;
         if (pullrate == 0) {
             return current;
         } else if (pullrate == 1)
-            return (int) (signum * base + signum * (Math.abs(current) % base) / 3);
+            return (signum * base + signum * (Math.abs(current) % base) / 3);
         else if (pullrate == 2) {
-            return (int) (1.333333333f * signum * base + signum * (Math.abs(current) % base) / 4);
-        }
-        else if (pullrate == 3) {
-            return (int) (1.583333333f * signum * base + signum * (Math.abs(current) % base) / 5);
+            return (1.333333333f * signum * base + signum * (Math.abs(current) % base) / 4);
+        } else if (pullrate == 3) {
+            return (1.583333333f * signum * base + signum * (Math.abs(current) % base) / 5);
         } else {
-            return (int) (1.783333333f * signum * base + signum * (Math.abs(current) % base) / 6);
+            return (1.783333333f * signum * base + signum * (Math.abs(current) % base) / 6);
         }
     }
 

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply from:rootProject.file('andResConfig.gradle')
+apply from: rootProject.file('andResConfig.gradle')
 android {
     compileSdkVersion rootProject.ext.versions.compileSdkVersion
     buildToolsVersion rootProject.ext.versions.buildToolsVersion
@@ -21,14 +21,18 @@ android {
                 includeCompileClasspath = true
             }
         }
-
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: rootProject.ext.versions["applicationId"],
+                JPUSH_APPKEY : rootProject.ext.keys["jPushKey"],
+                JPUSH_CHANNEL: rootProject.ext.keys["jPushChannel"],
+        ]
     }//自定义输出apk名字
     applicationVariants.all {
         variant ->
             variant.outputs.all { output ->
-                    outputFileName = new File("App/app_v" + defaultConfig.versionName + "_" +
-                            new Date().format("yyyy-MM-dd") + "_" +
-                            buildType.name + ".apk")
+                outputFileName = new File("App/app_v" + defaultConfig.versionName + "_" +
+                        new Date().format("yyyy-MM-dd") + "_" +
+                        buildType.name + ".apk")
             }
     }
     signingConfigs {
@@ -65,7 +69,7 @@ dependencies {
     implementation project(':common')
     if (!Boolean.valueOf(rootProject.ext.isModule)) {
         //main模块
-      //TODO
+        //TODO
         implementation project(':basemoudle')
 
     }
