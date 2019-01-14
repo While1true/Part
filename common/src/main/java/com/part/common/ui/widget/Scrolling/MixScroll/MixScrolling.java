@@ -245,7 +245,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     }
 
     @Override
-    protected void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
+    public void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
         if (direction == ScrollDirection.Y) {
             doScroll(deltaY, scrolledXY, fling, true);
         } else {
@@ -324,7 +324,6 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         } else {
             int scrollDistance = direction == ScrollDirection.Y ? backScroll[1] : backScroll[0];
             int scroll = (int) animatedValue;
-            System.out.println(scroll+":"+(scroll - getScrollYY()));
 //            if(refreshType==RefreshMode.NORMAL) {
 //              scrollTo(direction == ScrollDirection.Y ? 0 : scroll, direction == ScrollDirection.X ? 0 : scroll);
 //            }else{
@@ -418,5 +417,10 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         for (OnScrollStateListener listener : listeners) {
             listener.onScroll(currentX, currentY);
         }
+    }
+
+    @Override
+    protected boolean needDispathNestedPreScroll() {
+        return getScroll()==0;
     }
 }

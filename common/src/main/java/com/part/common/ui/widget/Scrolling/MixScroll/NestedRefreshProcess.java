@@ -1,5 +1,6 @@
 package com.part.common.ui.widget.Scrolling.MixScroll;
 
+import android.support.design.widget.AppBarLayout;
 import android.view.ViewGroup;
 
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.IScrollProcess;
@@ -14,14 +15,29 @@ import com.part.common.ui.widget.Scrolling.MixScroll.Base.Refreshable;
  * life is short , bugs are too many!
  */
 public class NestedRefreshProcess implements IScrollProcess {
-    Refreshable header,footer;
+    private Refreshable header, footer;
+    private AppBarLayoutState state = AppBarLayoutState.EXPANDED;
+    AppBarLayout.OnOffsetChangedListener listener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+            if (i == 0) {
+                state = AppBarLayoutState.EXPANDED;
+            } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
+                state = AppBarLayoutState.COLLAPSED;
+            } else {
+                state = AppBarLayoutState.MIDDLE;
+            }
+        }
+    };
 
-    public NestedRefreshProcess() {
+    public NestedRefreshProcess(AppBarLayout layout) {
+        layout.addOnOffsetChangedListener(listener);
     }
 
-    public NestedRefreshProcess(Refreshable header, Refreshable footer) {
+    public NestedRefreshProcess(Refreshable header, Refreshable footer, AppBarLayout layout) {
         this.header = header;
         this.footer = footer;
+        layout.addOnOffsetChangedListener(listener);
     }
 
     @Override
@@ -49,12 +65,12 @@ public class NestedRefreshProcess implements IScrollProcess {
 
     @Override
     public Refreshable getFooter(ViewGroup group) {
-        return  footer;
+        return footer;
     }
 
 
     private void onHeaderVirtical(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
-        if(mixScrolling.getRefreshState() == RefreshState.LOADING)
+        if (mixScrolling.getRefreshState() == RefreshState.LOADING||(remain<0&&state!=AppBarLayoutState.EXPANDED))
             return;
         boolean refreshing = mixScrolling.getRefreshState() == RefreshState.REFRESHING;
         if (!refreshing && fling) {
@@ -63,11 +79,11 @@ public class NestedRefreshProcess implements IScrollProcess {
         int scrollY = mixScrolling.getScrollY();
         float strength = mixScrolling.getStrength();
         Refreshable header = mixScrolling.getHeader();
-        int canPullSpace = (fling||refreshing)?header.getRefreshSpace():header.canPullSpace();
+        int canPullSpace = (fling || refreshing) ? header.getRefreshSpace() : header.canPullSpace();
         //下滑
         if (remain < 0) {
-            canPullSpace=Math.max(0,canPullSpace+scrollY);
-            if(canPullSpace!=0) {
+            canPullSpace = Math.max(0, canPullSpace + scrollY);
+            if (canPullSpace != 0) {
                 float virtualPull = refreshing ? remain : remain / strength;
                 float min = Math.min(-virtualPull, canPullSpace);
                 mixScrolling.scrollBy(0, -(int) min);
@@ -83,7 +99,7 @@ public class NestedRefreshProcess implements IScrollProcess {
 
     private void onHeaderHoriztional(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
 
-        if(mixScrolling.getRefreshState() == RefreshState.LOADING)
+        if (mixScrolling.getRefreshState() == RefreshState.LOADING||(remain<0&&state!=AppBarLayoutState.EXPANDED))
             return;
         boolean refreshing = mixScrolling.getRefreshState() == RefreshState.REFRESHING;
         if (!refreshing && fling) {
@@ -92,24 +108,25 @@ public class NestedRefreshProcess implements IScrollProcess {
         int scrollX = mixScrolling.getScrollX();
         float strength = mixScrolling.getStrength();
         Refreshable header = mixScrolling.getHeader();
-        int canPullSpace = (fling||refreshing)?header.getRefreshSpace():header.canPullSpace();
+        int canPullSpace = (fling || refreshing) ? header.getRefreshSpace() : header.canPullSpace();
         //下滑
         if (remain < 0) {
-            canPullSpace=Math.max(0,canPullSpace+scrollX);
-            if(canPullSpace!=0) {
+            canPullSpace = Math.max(0, canPullSpace + scrollX);
+            if (canPullSpace != 0) {
                 float virtualPull = refreshing ? remain : remain / strength;
                 float min = Math.min(-virtualPull, canPullSpace);
-                mixScrolling.scrollBy(-(int) min,0);
+                mixScrolling.scrollBy(-(int) min, 0);
                 scrolledXY[0] -= refreshing ? min : min * strength;
             }
         } else {
             int min = Math.min(-scrollX, remain);
-            mixScrolling.scrollBy( min,0);
+            mixScrolling.scrollBy(min, 0);
             scrolledXY[0] += min;
         }
     }
+
     private void onFooterVirtical(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
-        if(mixScrolling.getRefreshState() == RefreshState.REFRESHING)
+        if (mixScrolling.getRefreshState() == RefreshState.REFRESHING)
             return;
         boolean loading = mixScrolling.getRefreshState() == RefreshState.LOADING;
         if (!loading && fling) {
@@ -118,7 +135,7 @@ public class NestedRefreshProcess implements IScrollProcess {
         int scrollY = mixScrolling.getScrollY();
         float strength = mixScrolling.getStrength();
         Refreshable footer = mixScrolling.getFooter();
-        int canPullSpace = (fling||loading)?footer.getRefreshSpace():footer.canPullSpace();
+        int canPullSpace = (fling || loading) ? footer.getRefreshSpace() : footer.canPullSpace();
         //下滑
         if (remain < 0) {
             int min = Math.min(scrollY, -remain);
@@ -126,8 +143,8 @@ public class NestedRefreshProcess implements IScrollProcess {
             scrolledXY[1] -= min;
 
         } else {
-            canPullSpace=Math.max(0,canPullSpace-scrollY);
-            if(canPullSpace!=0) {
+            canPullSpace = Math.max(0, canPullSpace - scrollY);
+            if (canPullSpace != 0) {
                 float virtualPull = loading ? remain : remain / strength;
                 float min = Math.min(virtualPull, canPullSpace);
                 mixScrolling.scrollBy(0, (int) min);
@@ -138,7 +155,7 @@ public class NestedRefreshProcess implements IScrollProcess {
     }
 
     private void onFooterHoriztional(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
-        if(mixScrolling.getRefreshState() == RefreshState.REFRESHING)
+        if (mixScrolling.getRefreshState() == RefreshState.REFRESHING)
             return;
         boolean loading = mixScrolling.getRefreshState() == RefreshState.LOADING;
         if (!loading && fling) {
@@ -147,27 +164,32 @@ public class NestedRefreshProcess implements IScrollProcess {
         int scrollX = mixScrolling.getScrollX();
         float strength = mixScrolling.getStrength();
         Refreshable footer = mixScrolling.getFooter();
-        int canPullSpace = (fling||loading)?footer.getRefreshSpace():footer.canPullSpace();
+        int canPullSpace = (fling || loading) ? footer.getRefreshSpace() : footer.canPullSpace();
         //下滑
         if (remain < 0) {
             int min = Math.min(scrollX, -remain);
-            mixScrolling.scrollBy( -min,0);
+            mixScrolling.scrollBy(-min, 0);
             scrolledXY[0] -= min;
 
         } else {
-            canPullSpace=Math.max(0,canPullSpace-scrollX);
-            if(canPullSpace!=0) {
+            canPullSpace = Math.max(0, canPullSpace - scrollX);
+            if (canPullSpace != 0) {
                 float virtualPull = loading ? remain : remain / strength;
                 float min = Math.min(virtualPull, canPullSpace);
-                mixScrolling.scrollBy( (int) min,0);
+                mixScrolling.scrollBy((int) min, 0);
                 scrolledXY[0] += loading ? min : min * strength;
             }
         }
 
 
     }
+
     @Override
     public RefreshMode getMode() {
         return RefreshMode.NORMAL;
+    }
+
+    public enum AppBarLayoutState {
+        COLLAPSED, EXPANDED, MIDDLE
     }
 }

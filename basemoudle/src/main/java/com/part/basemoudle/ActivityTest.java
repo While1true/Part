@@ -2,6 +2,7 @@ package com.part.basemoudle;
 
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
+import android.support.design.widget.AppBarLayout;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +11,8 @@ import com.part.common.Util.ToastUtil;
 import com.part.common.ui.activity.BaseMvpActivity;
 import com.part.common.ui.widget.Scrolling.MixScroll.ElasticProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling;
+import com.part.common.ui.widget.Scrolling.MixScroll.NestedRefreshProcess;
+import com.part.common.ui.widget.Scrolling.MixScroll.SimpleHeaderFooter;
 import com.part.common.ui.widget.Scrolling.ScrollDirection;
 
 import butterknife.BindView;
@@ -43,7 +46,7 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
                 ToastUtil.showToaste("xcccccccccccc");
             }
         });
-        mixscroll.setScrollProcess(new ElasticProcess());
+        mixscroll.setScrollProcess(new NestedRefreshProcess(new SimpleHeaderFooter(this,true),new SimpleHeaderFooter(this,false), (AppBarLayout) findViewById(R.id.appbar)));
     }
 
     @Override

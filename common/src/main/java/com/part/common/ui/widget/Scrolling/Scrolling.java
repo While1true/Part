@@ -196,7 +196,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                 final int initdy=dy;
 
                 // nested pre scroll
-                if (dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
+                if (needDispathNestedPreScroll()&&dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
                     dx -= mScrollConsumed[0];
                     dy -= mScrollConsumed[1];
                     vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
@@ -473,5 +473,9 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
             return t * t * t * t * t + 1.0f;
         }
     };
+
+    protected boolean needDispathNestedPreScroll(){
+        return true;
+    }
 
 }
