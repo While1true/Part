@@ -324,6 +324,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         } else {
             int scrollDistance = direction == ScrollDirection.Y ? backScroll[1] : backScroll[0];
             int scroll = (int) animatedValue;
+            System.out.println(scroll+":"+(scroll - getScrollYY()));
 //            if(refreshType==RefreshMode.NORMAL) {
 //              scrollTo(direction == ScrollDirection.Y ? 0 : scroll, direction == ScrollDirection.X ? 0 : scroll);
 //            }else{
@@ -347,10 +348,12 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     //头尾部出来不调用fling,调用时停止动画
     @Override
     protected boolean canFling(int vx, int vy) {
-//        int scroll = getScroll();
-//        if (scroll != 0)
-//            return false;
-//        cancelAnimation();
+        if(refreshType!=RefreshMode.NORMAL) {
+            int scroll = getScroll();
+            if (scroll != 0)
+                return false;
+            cancelAnimation();
+        }
         return super.canFling(vx, vy);
     }
 
