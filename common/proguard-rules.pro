@@ -35,3 +35,16 @@
 
     -dontwarn cn.jiguang.**
     -keep class cn.jiguang.** { *; }
+
+# QRCode
+# zxing
+-dontwarn com.google.zxing.**
+-keep class com.google.zxing.** {*;}
+
+# PAY
+## alipay
+-dontwarn com.alipay.**
+-keep class com.alipay.** {*;}
+## unionpay
+-dontwarn com.unionpay.**
+-keep class com.unionpay.** {*;}

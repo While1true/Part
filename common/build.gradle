@@ -96,4 +96,7 @@ dependencies {
     //极光推送
     api rootProject.ext.dependencies["jpush"]
     api rootProject.ext.dependencies["jpushCore"]
+
+    api rootProject.ext.dependencies["pay"]
+    api rootProject.ext.dependencies["qr"]
 }

@@ -77,7 +77,6 @@ public class ElasticProcess implements IScrollProcess {
                 scrollY = mixScrolling.getScrollYY();
                 scrollContent.setPivotX(0);
                 scrollContent.setPivotY(0);
-                System.out.println(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
                 scrollContent.setScaleY(Math.min(1.5f, 1f + caculateZhangli(Math.abs(scrollY), mixScrolling.getMeasuredHeight()/6) / mixScrolling.getMeasuredHeight()/2));
             } else {
                 if (fling) {

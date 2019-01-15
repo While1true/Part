@@ -7,6 +7,9 @@ buildscript {
         jcenter()
         mavenCentral()
         maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven {
+            url 'http://maven.6xyun.cn/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
@@ -26,6 +29,9 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven {
+            url 'http://maven.6xyun.cn/'
+        }
     }
 }
 

@@ -2,18 +2,15 @@ package com.part.common.ui.widget.Scrolling;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild2;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewParent;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
@@ -196,7 +193,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                 final int initdy=dy;
 
                 // nested pre scroll
-                if (needDispathNestedPreScroll()&&dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
+                if (needDispathNestedPreScroll(initdx,initdy)&&dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
                     dx -= mScrollConsumed[0];
                     dy -= mScrollConsumed[1];
                     vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
@@ -474,7 +471,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
         }
     };
 
-    protected boolean needDispathNestedPreScroll(){
+    protected boolean needDispathNestedPreScroll(int initdx, int initdy){
         return true;
     }
 

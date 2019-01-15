@@ -245,7 +245,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     }
 
     @Override
-    public void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
+    protected void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
         if (direction == ScrollDirection.Y) {
             doScroll(deltaY, scrolledXY, fling, true);
         } else {
@@ -420,7 +420,8 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     }
 
     @Override
-    protected boolean needDispathNestedPreScroll() {
+    protected boolean needDispathNestedPreScroll(int initdx, int initdy) {
+        int d=direction==ScrollDirection.X?initdx:initdy;
         return getScroll()==0;
     }
 }

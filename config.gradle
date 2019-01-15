@@ -52,6 +52,9 @@ ext {
 
             jPush      : "3.1.6",
             jPushCore      : "1.2.5",
+
+            qr:"0.1.1",
+            pay:"0.1.3",
     ]
 
     keys = [
@@ -115,5 +118,10 @@ ext {
             //极光推送
             "jpush":"cn.jiguang.sdk:jpush:${versions["jPush"]}",
             "jpushCore":"cn.jiguang.sdk:jcore:${versions["jPushCore"]}",
+
+            "qr":"com.liux.android:qrcode:${versions["qr"]}",
+            "pay":"com.liux.android:pay:${versions["pay"]}",
+
+
     ]
 }
