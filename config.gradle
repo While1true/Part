@@ -4,6 +4,7 @@ ext {
     isNeedGreenDao = false
     isNeedDagger = true
     isNeedEventBus = false
+    isNeedUMengShare = true
 
     sign = [
             keyAlias     : "123",
@@ -49,20 +50,31 @@ ext {
 
             uMengVersion            : "8.0.0",
             uMengCommonVersion      : "2.0.0",
+            uMengShare              : "6.9.4",
 
-            jPush      : "3.1.6",
-            jPushCore      : "1.2.5",
+            jPush                   : "3.1.6",
+            jPushCore               : "1.2.5",
 
-            qr:"0.1.1",
-            pay:"0.1.3",
+            qr                      : "0.1.1",
+            pay                     : "0.1.3",
+            permission              : "0.1.4",
+            boxing                  : "0.1.4",
     ]
 
     keys = [
-            uMengkey: '"5c395001b465f52f22000680"',//TODO
+            uMengkey    : '"5c395001b465f52f22000680"',//TODO
             uMengChannel: '"测试"',//TODO
 
-            jPushKey:"e7e1e1202b7f406ac609d377",//TODO
-            jPushChannel:"测试",//TODO
+            jPushKey    : '"e7e1e1202b7f406ac609d377"',//TODO
+            jPushChannel: '"测试"',//TODO
+
+            WXKey: '"12"',//TODO
+            WXSecret: '"12"',//TODO
+            WBKey: '"12"',//TODO
+            WBSecret: '"12"',//TODO
+            WBCallBack: '"12"',//TODO
+            QQKey: '"12"',//TODO
+            QQSecret: '"12"',//TODO
     ]
     dependencies = [
             "runner"              : "com.android.support.test:runner:${versions["runnerVersion"]}",
@@ -113,14 +125,22 @@ ext {
 
             //友盟
             "uMeng"               : "com.umeng.umsdk:analytics:${versions["uMengVersion"]}",
-            "uMengCommon"               : "com.umeng.umsdk:common:${versions["uMengCommonVersion"]}",
+            "uMengCommon"         : "com.umeng.umsdk:common:${versions["uMengCommonVersion"]}",
+
+            "uMengShare_Core"     : "com.umeng.umsdk:share-core:${versions["uMengShare"]}",
+            "uMengShare_Widget"   : "com.umeng.umsdk:share-board:${versions["uMengShare"]}",
+            "uMengShare_QQ"       : "com.umeng.umsdk:share-qq:${versions["uMengShare"]}",
+            "uMengShare_WeChat"   : "com.umeng.umsdk:share-wx:${versions["uMengShare"]}",
+            "uMengShare_Sina"     : "com.umeng.umsdk:share-sina:${versions["uMengShare"]}",
 
             //极光推送
-            "jpush":"cn.jiguang.sdk:jpush:${versions["jPush"]}",
-            "jpushCore":"cn.jiguang.sdk:jcore:${versions["jPushCore"]}",
+            "jpush"               : "cn.jiguang.sdk:jpush:${versions["jPush"]}",
+            "jpushCore"           : "cn.jiguang.sdk:jcore:${versions["jPushCore"]}",
 
-            "qr":"com.liux.android:qrcode:${versions["qr"]}",
-            "pay":"com.liux.android:pay:${versions["pay"]}",
+            "qr"                  : "com.liux.android:qrcode:${versions["qr"]}",
+            "pay"                 : "com.liux.android:pay:${versions["pay"]}",
+            "permission"          : "com.liux.android:permission:${versions["permission"]}",
+            "boxing"              : "com.liux.android:boxing:${versions["boxing"]}",
 
 
     ]

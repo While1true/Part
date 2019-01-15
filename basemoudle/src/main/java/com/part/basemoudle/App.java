@@ -1,6 +1,5 @@
 package com.part.basemoudle;
 
-import android.app.Application;
 
 import com.part.common.ui.BaseApp;
 

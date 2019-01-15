@@ -14,6 +14,7 @@ import com.part.common.Util.AutoScreenUtils;
 import com.part.common.Util.ToastUtil;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.commonsdk.statistics.common.DeviceConfig;
+import com.umeng.socialize.PlatformConfig;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -28,14 +29,14 @@ public abstract class BaseApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(getPackageName().equals(getCurrentProcessName(this))) {
+        if (getPackageName().equals(getCurrentProcessName(this))) {
 
             Logger.addLogAdapter(new AndroidLogAdapter());
 
             AppContext.init(this);
 
             ARouter.init(this);
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 ARouter.openDebug();
                 ARouter.openLog();
             }
@@ -43,9 +44,15 @@ public abstract class BaseApp extends Application {
             AutoScreenUtils.AdjustDensity(this);
             ToastUtil.init();
 
-            UMConfigure.init(this,BuildConfig.UMengKey,BuildConfig.UMengChannel , UMConfigure.DEVICE_TYPE_PHONE, null);
+            UMConfigure.init(this, BuildConfig.UMengKey, BuildConfig.UMengChannel, UMConfigure.DEVICE_TYPE_PHONE, null);
             UMConfigure.setLogEnabled(BuildConfig.DEBUG);
 
+            if (BuildConfig.needUMengShare) {
+                PlatformConfig.setWeixin(BuildConfig.WXKey, BuildConfig.WXSecret);
+                //豆瓣RENREN平台目前只能在服务器端配置
+                PlatformConfig.setSinaWeibo(BuildConfig.WBKey, BuildConfig.WBSecret, BuildConfig.WBCallBack);
+                PlatformConfig.setQQZone(BuildConfig.QQKey, BuildConfig.QQSecret);
+            }
             JPushInterface.setDebugMode(BuildConfig.DEBUG);
             JPushInterface.init(this);
             init();
@@ -53,6 +60,7 @@ public abstract class BaseApp extends Application {
         }
 
     }
+
     protected abstract void init();
 
     /**

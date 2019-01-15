@@ -25,6 +25,7 @@ android {
                 JPUSH_PKGNAME: rootProject.ext.versions["applicationId"],
                 JPUSH_APPKEY : rootProject.ext.keys["jPushKey"],
                 JPUSH_CHANNEL: rootProject.ext.keys["jPushChannel"],
+                qqappid: rootProject.ext.versions["applicationId"],
         ]
     }//自定义输出apk名字
     applicationVariants.all {

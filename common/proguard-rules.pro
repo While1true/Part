@@ -24,6 +24,14 @@
     -keepclassmembers class * {
        public <init> (org.json.JSONObject);
     }
+    -dontshrink
+    -dontoptimize
+    -dontwarn android.webkit.WebView
+    -dontwarn com.umeng.**
+    -keep public class javax.**
+    -keep public class android.webkit.**
+    -dontwarn android.support.v4.**
+
     -keepclassmembers enum * {
         public static **[] values();
         public static ** valueOf(java.lang.String);
@@ -48,3 +56,13 @@
 ## unionpay
 -dontwarn com.unionpay.**
 -keep class com.unionpay.** {*;}
+
+-keep class com.tencent.mm.opensdk.** {
+*;
+}
+-keep class com.tencent.wxop.* {
+*;
+}
+-keep class com.tencent.mm.sdk.* {
+*;
+}

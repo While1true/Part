@@ -77,7 +77,6 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         final int action = ev.getActionMasked();
         final int actionIndex = ev.getActionIndex();
-        System.out.println(action+"--"+mIsDraging);
         if ((action == MotionEvent.ACTION_MOVE) && mIsDraging) {
             return true;
         }

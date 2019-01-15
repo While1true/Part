@@ -13,8 +13,17 @@ android {
         //MultiDex分包方法
         multiDexEnabled true
 
-        buildConfigField  'String','UMengKey',String.valueOf(rootProject.ext.keys["uMengkey"])
-        buildConfigField  'String','UMengChannel',String.valueOf(rootProject.ext.keys["uMengChannel"])
+        buildConfigField 'String', 'UMengKey', String.valueOf(rootProject.ext.keys["uMengkey"])
+        buildConfigField 'String', 'UMengChannel', String.valueOf(rootProject.ext.keys["uMengChannel"])
+        buildConfigField 'Boolean', 'needUMengShare',"${rootProject.ext.isNeedUMengShare}"
+
+        buildConfigField 'String', 'WXKey', String.valueOf(rootProject.ext.keys["WXKey"])
+        buildConfigField 'String', 'WXSecret', String.valueOf(rootProject.ext.keys["WXSecret"])
+        buildConfigField 'String', 'WBKey', String.valueOf(rootProject.ext.keys["WBKey"])
+        buildConfigField 'String', 'WBSecret', String.valueOf(rootProject.ext.keys["WBSecret"])
+        buildConfigField 'String', 'WBCallBack', String.valueOf(rootProject.ext.keys["WBCallBack"])
+        buildConfigField 'String', 'QQKey', String.valueOf(rootProject.ext.keys["QQKey"])
+        buildConfigField 'String', 'QQSecret', String.valueOf(rootProject.ext.keys["QQSecret"])
 
         //Arouter路由配置
         javaCompileOptions {
@@ -27,7 +36,7 @@ android {
     }
 
     buildTypes {
-            release {
+        release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -76,7 +85,6 @@ dependencies {
     api rootProject.ext.dependencies["rxAndroid"]
     //日志
     api rootProject.ext.dependencies["logger"]
-
     //图片加载
     api rootProject.ext.dependencies["glide"]
     api rootProject.ext.dependencies["glide_okhttp"]
@@ -84,7 +92,6 @@ dependencies {
     if (rootProject.ext.isNeedGreenDao.toBoolean()) {
         api rootProject.ext.dependencies["greenDao"]
     }
-
     if (rootProject.ext.isNeedDagger.toBoolean()) {
         api rootProject.ext.dependencies["dagger"]
         annotationProcessor rootProject.ext.dependencies["daggerCompile"]
@@ -92,11 +99,23 @@ dependencies {
     //友盟
     api rootProject.ext.dependencies["uMeng"]
     api rootProject.ext.dependencies["uMengCommon"]
-
+    if (rootProject.ext.isNeedUMengShare.toBoolean()) {
+        api rootProject.ext.dependencies["uMengShare_Core"]
+        api rootProject.ext.dependencies["uMengShare_QQ"]
+        api(rootProject.ext.dependencies["uMengShare_WeChat"]) {
+            exclude group: 'com.tencent.mm.opensdk'
+        }
+        api rootProject.ext.dependencies["uMengShare_Sina"]
+        api rootProject.ext.dependencies["uMengShare_Widget"]
+        implementation files('libs/umeng-share-email-6.9.4.jar')
+        implementation files('libs/umeng-share-sms-6.9.4.jar')
+    }
     //极光推送
     api rootProject.ext.dependencies["jpush"]
     api rootProject.ext.dependencies["jpushCore"]
-
     api rootProject.ext.dependencies["pay"]
     api rootProject.ext.dependencies["qr"]
+    api rootProject.ext.dependencies["permission"]
+    api rootProject.ext.dependencies["boxing"]
+
 }
