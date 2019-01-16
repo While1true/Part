@@ -51,7 +51,7 @@ public class RetrofitHttpManger {
         private String baseUrl;
         private Retrofit mRetrofit;
         private boolean showlog = true;
-        private List<Interceptor>interceptorList=new ArrayList<>();
+        private List<Interceptor> interceptorList = new ArrayList<>();
         OkHttpClient httpclient;
         private Map<String, String> headers = new LinkedHashMap<>();
         private HttpsCerUtil.SSLParams sslParams;
@@ -76,12 +76,14 @@ public class RetrofitHttpManger {
             headers.put(key, value);
             return this;
         }
+
         public Builder addInterceptor(Interceptor interceptor) {
-            if(!interceptorList.contains(interceptor)){
+            if (!interceptorList.contains(interceptor)) {
                 interceptorList.add(interceptor);
             }
             return this;
         }
+
         public Builder setCert(InputStream[] certificates, InputStream bksFile, String password) {
             sslParams = HttpsCerUtil.getSslSocketFactory(certificates, bksFile, password);
             return this;
@@ -95,15 +97,6 @@ public class RetrofitHttpManger {
         public RetrofitHttpManger Builder() {
             if (httpclient == null) {
                 OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                if (showlog) {
-                    builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                                @Override
-                                public void log(String message) {
-                                    LogUtil.d(message);
-                                }
-                            }).setLevel(HttpLoggingInterceptor.Level.BODY)
-                    );
-                }
                 builder.connectTimeout(connectOut, TimeUnit.SECONDS)
                         .readTimeout(readOut, TimeUnit.SECONDS)
                         // 添加公共参数拦截器
@@ -122,6 +115,10 @@ public class RetrofitHttpManger {
                 for (int i = 0; i < interceptorList.size(); i++) {
                     builder.addInterceptor(interceptorList.get(i));
                 }
+                if (showlog) {
+                    builder.addInterceptor(new HttpLoggingInterceptor()
+                            .setLevel(HttpLoggingInterceptor.Level.BODY));
+                }
                 if (sslParams != null) {
                     builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
                 }
@@ -134,7 +131,7 @@ public class RetrofitHttpManger {
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .baseUrl(baseUrl)
                     .build();
-            retrofitHttpManger.httpClients.put(retrofitHttpManger,httpclient);
+            retrofitHttpManger.httpClients.put(retrofitHttpManger, httpclient);
             retrofitHttpManger.mRetrofit = mRetrofit;
             return retrofitHttpManger;
         }
