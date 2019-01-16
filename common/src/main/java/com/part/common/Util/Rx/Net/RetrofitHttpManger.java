@@ -1,12 +1,17 @@
 package com.part.common.Util.Rx.Net;
 
 
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.part.common.Util.LogUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -46,6 +51,7 @@ public class RetrofitHttpManger {
         private String baseUrl;
         private Retrofit mRetrofit;
         private boolean showlog = true;
+        private List<Interceptor>interceptorList=new ArrayList<>();
         OkHttpClient httpclient;
         private Map<String, String> headers = new LinkedHashMap<>();
         private HttpsCerUtil.SSLParams sslParams;
@@ -70,7 +76,12 @@ public class RetrofitHttpManger {
             headers.put(key, value);
             return this;
         }
-
+        public Builder addInterceptor(Interceptor interceptor) {
+            if(!interceptorList.contains(interceptor)){
+                interceptorList.add(interceptor);
+            }
+            return this;
+        }
         public Builder setCert(InputStream[] certificates, InputStream bksFile, String password) {
             sslParams = HttpsCerUtil.getSslSocketFactory(certificates, bksFile, password);
             return this;
@@ -86,11 +97,12 @@ public class RetrofitHttpManger {
                 OkHttpClient.Builder builder = new OkHttpClient.Builder();
                 if (showlog) {
                     builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                        @Override
-                        public void log(String message) {
-                            Log.i("HttpLoggingInterceptor", message);
-                        }
-                    }).setLevel(HttpLoggingInterceptor.Level.BODY));
+                                @Override
+                                public void log(String message) {
+                                    LogUtil.d(message);
+                                }
+                            }).setLevel(HttpLoggingInterceptor.Level.BODY)
+                    );
                 }
                 builder.connectTimeout(connectOut, TimeUnit.SECONDS)
                         .readTimeout(readOut, TimeUnit.SECONDS)
@@ -107,7 +119,9 @@ public class RetrofitHttpManger {
                                 return chain.proceed(builder.build());
                             }
                         });
-
+                for (int i = 0; i < interceptorList.size(); i++) {
+                    builder.addInterceptor(interceptorList.get(i));
+                }
                 if (sslParams != null) {
                     builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
                 }

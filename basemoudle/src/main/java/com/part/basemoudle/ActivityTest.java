@@ -14,6 +14,8 @@ import com.liux.android.permission.Authorizer;
 import com.liux.android.permission.Continue;
 import com.liux.android.permission.OnContinueListener;
 import com.liux.android.permission.runtime.OnRuntimePermissionListener;
+import com.part.common.Util.Rx.LifeObserver;
+import com.part.common.Util.Rx.Utils.RxSchedulers;
 import com.part.common.Util.ToastUtil;
 import com.part.common.ui.activity.BaseMvpActivity;
 import com.part.common.ui.widget.Scrolling.MixScroll.ElasticProcess;
@@ -52,14 +54,12 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
     @Override
     protected void initView() {
-        re();
-
         ButterKnife.bind(this);
         findViewById(R.id.ccc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 re();
-                ToastUtil.showToaste("xccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+                ToastUtil.showToast("xccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
             }
         });
         mixscroll.setScrollProcess(new RefreshProcess(new SimpleHeaderFooter(this, true), new SimpleHeaderFooter(this, false)));
@@ -130,6 +130,12 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
     @OnClick({R2.id.xxx_textview})
     public void onViewClicked() {
-        showLoading();
+        Net.creatService(IService.class).getData("0").compose(RxSchedulers.compose())
+                .subscribe(new LifeObserver<Object>(this,true) {
+                    @Override
+                    public void onNext(Object s) {
+                        ToastUtil.showToast(s.toString());
+                    }
+                });
     }
 }

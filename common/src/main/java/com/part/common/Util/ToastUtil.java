@@ -47,7 +47,7 @@ public class ToastUtil {
      * @param text
      * @param during
      */
-    public static void showToaste(CharSequence text, int during) {
+    public static void showToast(CharSequence text, int during) {
         textView.setText(text);
         get().setDuration(during);
         get().show();
@@ -58,7 +58,7 @@ public class ToastUtil {
      *
      * @param text
      */
-    public static void showToaste(CharSequence text) {
+    public static void showToast(CharSequence text) {
         textView.setText(text);
         get().setDuration(Toast.LENGTH_SHORT);
         get().show();

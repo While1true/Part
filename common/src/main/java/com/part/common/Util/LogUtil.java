@@ -1,7 +1,7 @@
 package com.part.common.Util;
 
-import com.orhanobut.logger.BuildConfig;
 import com.orhanobut.logger.Logger;
+import com.part.common.BuildConfig;
 
 /**
  * by ckckck 2019/1/11

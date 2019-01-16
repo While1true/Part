@@ -247,9 +247,9 @@ public class HttpNet {
     }
 
     public static class Params{
-        private LinkedHashMap<String, String> params =new LinkedHashMap();
-        private LinkedHashMap<String, String> headers =new LinkedHashMap();
-        private LinkedHashMap<String, String> files =new LinkedHashMap();
+        private LinkedHashMap<String, String> params =new LinkedHashMap<>();
+        private LinkedHashMap<String, String> headers =new LinkedHashMap<>();
+        private LinkedHashMap<String, String> files =new LinkedHashMap<>();
         public Params add(String key) {
             params.put(key, "");
             return this;
