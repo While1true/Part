@@ -1,4 +1,4 @@
-package com.part.common.Util.Glide;
+package com.liux.android.glide;
 
 /**
  * @author ckckck   2019/1/5

@@ -19,6 +19,7 @@ import com.part.common.ui.activity.BaseMvpActivity;
 import com.part.common.ui.widget.Scrolling.MixScroll.ElasticProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling;
 import com.part.common.ui.widget.Scrolling.MixScroll.NestedRefreshProcess;
+import com.part.common.ui.widget.Scrolling.MixScroll.RefreshProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.SimpleHeaderFooter;
 import com.part.common.ui.widget.Scrolling.ScrollDirection;
 import com.umeng.socialize.ShareAction;
@@ -57,10 +58,11 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
         findViewById(R.id.ccc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showToaste("xcccccccccccc");
+                re();
+                ToastUtil.showToaste("xccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
             }
         });
-        mixscroll.setScrollProcess(new NestedRefreshProcess(new SimpleHeaderFooter(this, true), new SimpleHeaderFooter(this, false), (AppBarLayout) findViewById(R.id.appbar)));
+        mixscroll.setScrollProcess(new RefreshProcess(new SimpleHeaderFooter(this, true), new SimpleHeaderFooter(this, false)));
     }
 
     private void re() {
@@ -120,6 +122,7 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
     @Override
     protected void injectComponent() {
+
         DaggerTestComponent.builder().activityComponent(activityComponent)
                 .testModule(new TestModule(this))
                 .build().inject(this);
@@ -127,7 +130,6 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
     @OnClick({R2.id.xxx_textview})
     public void onViewClicked() {
-        re();
         showLoading();
     }
 }

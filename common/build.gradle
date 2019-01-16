@@ -88,6 +88,7 @@ dependencies {
     //图片加载
     api rootProject.ext.dependencies["glide"]
     api rootProject.ext.dependencies["glide_okhttp"]
+    annotationProcessor rootProject.ext.dependencies["glide_compiler"]
     //GreenDao
     if (rootProject.ext.isNeedGreenDao.toBoolean()) {
         api rootProject.ext.dependencies["greenDao"]
@@ -102,9 +103,9 @@ dependencies {
     if (rootProject.ext.isNeedUMengShare.toBoolean()) {
         api rootProject.ext.dependencies["uMengShare_Core"]
         api rootProject.ext.dependencies["uMengShare_QQ"]
-        api(rootProject.ext.dependencies["uMengShare_WeChat"]) {
-            exclude group: 'com.tencent.mm.opensdk'
-        }
+        api(rootProject.ext.dependencies["uMengShare_WeChat"])/* {
+            exclude group: 'com.tencent.mm.opensdk',module: 'wechat-sdk-android-with-mta'
+        }*/
         api rootProject.ext.dependencies["uMengShare_Sina"]
         api rootProject.ext.dependencies["uMengShare_Widget"]
         implementation files('libs/umeng-share-email-6.9.4.jar')
@@ -116,6 +117,10 @@ dependencies {
     api rootProject.ext.dependencies["pay"]
     api rootProject.ext.dependencies["qr"]
     api rootProject.ext.dependencies["permission"]
-    api rootProject.ext.dependencies["boxing"]
+    api (rootProject.ext.dependencies["boxing"]){
+        exclude group: 'com.liux.android',module: 'glide'
+    }
+
+    api rootProject.ext.dependencies["proguard"]
 
 }
