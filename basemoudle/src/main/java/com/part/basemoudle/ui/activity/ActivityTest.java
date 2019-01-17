@@ -14,9 +14,9 @@ import com.liux.android.permission.Authorizer;
 import com.liux.android.permission.Continue;
 import com.liux.android.permission.OnContinueListener;
 import com.liux.android.permission.runtime.OnRuntimePermissionListener;
-import com.part.basemoudle.DaggerTestComponent;
 import com.part.basemoudle.R;
 import com.part.basemoudle.R2;
+import com.part.basemoudle.injection.component.DaggerTestComponent;
 import com.part.basemoudle.injection.module.TestModule;
 import com.part.basemoudle.mvp.presenter.HelloPresenter;
 import com.part.common.util.boxing.FixedBoxing;
@@ -59,9 +59,13 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
         findViewById(R.id.ccc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                re();
-                ToastUtil.showToast("xccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+                ToastUtil.showWarnToast("成功");
+            }
+        });
+        findViewById(R.id.ccc2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.showToast("normal toast");
             }
         });
         FixedBoxing.init();
