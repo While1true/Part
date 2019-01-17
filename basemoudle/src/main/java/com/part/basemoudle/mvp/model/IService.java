@@ -1,4 +1,4 @@
-package com.part.basemoudle;
+package com.part.basemoudle.mvp.model;
 
 
 import io.reactivex.Observable;

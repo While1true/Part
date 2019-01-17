@@ -1,4 +1,4 @@
-package com.part.basemoudle;
+package com.part.basemoudle.injection.module;
 
 import com.part.common.mvp.IView;
 

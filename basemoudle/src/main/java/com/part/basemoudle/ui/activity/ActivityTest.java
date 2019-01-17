@@ -1,4 +1,4 @@
-package com.part.basemoudle;
+package com.part.basemoudle.ui.activity;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -8,16 +8,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
-import com.liux.android.boxing.Boxinger;
 import com.liux.android.boxing.OnCancelListener;
 import com.liux.android.boxing.OnMultiSelectListener;
 import com.liux.android.permission.Authorizer;
 import com.liux.android.permission.Continue;
 import com.liux.android.permission.OnContinueListener;
 import com.liux.android.permission.runtime.OnRuntimePermissionListener;
+import com.part.basemoudle.DaggerTestComponent;
+import com.part.basemoudle.R;
+import com.part.basemoudle.R2;
+import com.part.basemoudle.injection.module.TestModule;
+import com.part.basemoudle.mvp.presenter.HelloPresenter;
 import com.part.common.util.boxing.FixedBoxing;
-import com.part.common.util.rx.LifeObserver;
-import com.part.common.util.rx.Utils.RxSchedulers;
 import com.part.common.util.ToastUtil;
 import com.part.common.ui.activity.BaseMvpActivity;
 import com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling;

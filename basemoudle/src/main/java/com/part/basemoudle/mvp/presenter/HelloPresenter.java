@@ -1,4 +1,4 @@
-package com.part.basemoudle;
+package com.part.basemoudle.mvp.presenter;
 
 import com.part.common.mvp.IPresenter;
 import com.part.common.mvp.IView;

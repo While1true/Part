@@ -1,5 +1,8 @@
-package com.part.basemoudle;
+package com.part.basemoudle.injection.component;
 
+import com.part.basemoudle.ui.activity.ActivityTest;
+import com.part.basemoudle.ui.fragment.TestFragment;
+import com.part.basemoudle.injection.module.TestModule;
 import com.part.common.dagger.Component.ActivityComponent;
 import com.part.common.dagger.annotation.ComponentScope;
 

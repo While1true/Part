@@ -1,8 +1,12 @@
-package com.part.basemoudle;
+package com.part.basemoudle.ui.fragment;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.part.basemoudle.DaggerTestComponent;
+import com.part.basemoudle.R;
+import com.part.basemoudle.injection.module.TestModule;
+import com.part.basemoudle.mvp.presenter.HelloPresenter;
 import com.part.common.ui.fragment.BaseMvpFragment;
 
 /**
