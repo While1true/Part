@@ -244,6 +244,6 @@ public class ElasticProcess implements IScrollProcess {
 
     @Override
     public RefreshMode getMode() {
-        return RefreshMode.ELASTIC;
+        return RefreshMode.EVALUATE;
     }
 }

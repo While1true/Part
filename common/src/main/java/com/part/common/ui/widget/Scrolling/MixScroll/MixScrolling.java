@@ -356,7 +356,11 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         return super.canFling(vx, vy);
     }
 
-    private int getScroll() {
+    /**
+     * 根据direction返回该方向的scroll
+     * @return
+     */
+    public int getScroll() {
         return direction == ScrollDirection.X ? getScrollXX() : getScrollYY();
     }
 
@@ -411,7 +415,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     public void scrollTo(int x, int y) {
         currentX = x;
         currentY = y;
-        if (refreshType == RefreshMode.NORMAL) {
+        if (refreshType != RefreshMode.EVALUATE) {
             super.scrollTo(x, y);
         }
         for (OnScrollStateListener listener : listeners) {

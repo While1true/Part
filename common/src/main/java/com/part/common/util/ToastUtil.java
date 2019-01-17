@@ -142,7 +142,7 @@ public class ToastUtil {
         }
         get().show();
     }
-    public static final Drawable tint9PatchDrawableFrame(@ColorInt int tintColor) {
+    private static final Drawable tint9PatchDrawableFrame(@ColorInt int tintColor) {
         final NinePatchDrawable toastDrawable = (NinePatchDrawable) getDrawable(R.drawable.lib_toast_frame);
         toastDrawable.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
         return toastDrawable;

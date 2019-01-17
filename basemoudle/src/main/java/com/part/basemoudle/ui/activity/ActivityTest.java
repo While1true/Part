@@ -19,6 +19,7 @@ import com.part.basemoudle.R2;
 import com.part.basemoudle.injection.component.DaggerTestComponent;
 import com.part.basemoudle.injection.module.TestModule;
 import com.part.basemoudle.mvp.presenter.HelloPresenter;
+import com.part.common.ui.widget.Scrolling.MixScroll.OverscrollProcess;
 import com.part.common.util.boxing.FixedBoxing;
 import com.part.common.util.ToastUtil;
 import com.part.common.ui.activity.BaseMvpActivity;
@@ -69,7 +70,7 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
             }
         });
         FixedBoxing.init();
-        mixscroll.setScrollProcess(new RefreshProcess(new SimpleHeaderFooter(this, true), new SimpleHeaderFooter(this, false)));
+        mixscroll.setScrollProcess(new OverscrollProcess(true));
     }
 
     private void re() {

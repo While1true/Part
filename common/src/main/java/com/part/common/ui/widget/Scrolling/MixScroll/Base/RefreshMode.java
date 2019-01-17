@@ -6,5 +6,6 @@ package com.part.common.ui.widget.Scrolling.MixScroll.Base;
  * life is short , bugs are too many!
  */
 public enum RefreshMode {
-    NORMAL,EVALUATE,ELASTIC
+    //正常    //不会scroll   //头部不让fling
+    NORMAL,EVALUATE,NORMAL_SPECIL
 }
