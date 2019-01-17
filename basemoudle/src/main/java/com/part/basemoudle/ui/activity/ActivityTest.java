@@ -70,7 +70,7 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
             }
         });
         FixedBoxing.init();
-        mixscroll.setScrollProcess(new OverscrollProcess(true));
+        mixscroll.setScrollProcess(new OverscrollProcess());
     }
 
     private void re() {
