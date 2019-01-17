@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">common</string>
+
+
+
+    <style name="Boxing.ToolbarTheme" parent="Boxing.AppTheme.NoActionBar">
+        <item name="titleTextColor">@color/boxing_white</item>
+        <item name="android:textColorSecondary">@color/boxing_white</item>
+        <item name="android:textColor">@color/boxing_white</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+    <color name="boxing_colorPrimary">@color/colorPrimary</color>
+    <!--<color name="boxing_colorPrimaryAlpha">#D81B60</color>-->
+    <color name="boxing_colorPrimaryDark">@color/colorPrimaryDark</color>
 </resources>

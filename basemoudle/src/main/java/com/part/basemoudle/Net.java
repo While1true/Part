@@ -1,6 +1,6 @@
 package com.part.basemoudle;
 
-import com.part.common.Util.Rx.Net.RetrofitHttpManger;
+import com.part.common.util.rx.Net.RetrofitHttpManger;
 
 import okhttp3.OkHttpClient;
 

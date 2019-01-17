@@ -3,17 +3,15 @@ package com.part.common.ui;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.part.common.BuildConfig;
-import com.part.common.Util.AppContext;
-import com.part.common.Util.AutoScreenUtils;
-import com.part.common.Util.ToastUtil;
+import com.part.common.util.AppContext;
+import com.part.common.util.AutoScreenUtils;
+import com.part.common.util.ToastUtil;
 import com.umeng.commonsdk.UMConfigure;
-import com.umeng.commonsdk.statistics.common.DeviceConfig;
 import com.umeng.socialize.PlatformConfig;
 
 import cn.jpush.android.api.JPushInterface;

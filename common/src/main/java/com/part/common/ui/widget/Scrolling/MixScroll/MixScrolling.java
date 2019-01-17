@@ -33,7 +33,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     private View scrollContent;
     private RefreshMode refreshType;
     private RefreshState refreshState = RefreshState.IDEL;
-    private float strength = 2.5f;
+    private float strength = 3.0f;
     private ValueAnimator valueAnimator;
     private int[] backScroll = new int[2];
     private IScrollProcess iScrollProcess = new RefreshProcess();

@@ -93,8 +93,8 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                 }
 
                 if (!mIsDraging) {
-                    int dx = (int) (ev.getX(index)+0.5f);
-                    int dy = (int) (ev.getY(index)+0.5f);
+                    int dx = (int) (ev.getX(index) + 0.5f);
+                    int dy = (int) (ev.getY(index) + 0.5f);
                     float absY = Math.abs(mLastY - dy);
                     float absX = Math.abs(mLastX - dx);
                     float offset = direction == ScrollDirection.Y ? absY : absX;
@@ -102,7 +102,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                         // Start scrolling!
                         mLastX = dx;
                         mLastY = dy;
-                        mIsDraging=true;
+                        mIsDraging = true;
                         getParent().requestDisallowInterceptTouchEvent(true);
                     }
                 }
@@ -188,11 +188,11 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                 int dx = mLastX - x;
                 int dy = mLastY - y;
 
-                final int initdx=dx;
-                final int initdy=dy;
+                final int initdx = dx;
+                final int initdy = dy;
 
                 // nested pre scroll
-                if (needDispathNestedPreScroll(initdx,initdy)&&dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
+                if (needDispathNestedPreScroll(initdx, initdy) && dispatchNestedPreScroll(dx, dy, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
                     dx -= mScrollConsumed[0];
                     dy -= mScrollConsumed[1];
                     vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
@@ -221,24 +221,23 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                 if (mIsDraging) {
                     mLastX = x - mScrollOffset[0];
                     mLastY = y - mScrollOffset[1];
-                }
+                    // internal scroll
+                    mInterralScrollOffset[0] = 0;
+                    mInterralScrollOffset[1] = 0;
+                    scrollXY(dx, dy, mInterralScrollOffset, false);
 
-                // internal scroll
-                mInterralScrollOffset[0] = 0;
-                mInterralScrollOffset[1] = 0;
-                scrollXY(dx, dy, mInterralScrollOffset, false);
-
-                dx -= mInterralScrollOffset[0];
-                dy -= mInterralScrollOffset[1];
-                if (dispatchNestedScroll(initdx-dx, initdy-dy, dx,dy,mScrollOffset, ViewCompat.TYPE_TOUCH)) {
-                    mLastX -= mScrollOffset[0];
-                    mLastY -= mScrollOffset[1];
-                    vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
-                    mNestedOffsets[0] += mScrollOffset[0];
-                    mNestedOffsets[1] += mScrollOffset[1];
-                }
-                if (mInterralScrollOffset[0] != 0 && mInterralScrollOffset[1] != 0) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
+                    dx -= mInterralScrollOffset[0];
+                    dy -= mInterralScrollOffset[1];
+                    if (dispatchNestedScroll(initdx - dx, initdy - dy, dx, dy, mScrollOffset, ViewCompat.TYPE_TOUCH)) {
+                        mLastX -= mScrollOffset[0];
+                        mLastY -= mScrollOffset[1];
+                        vtev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
+                        mNestedOffsets[0] += mScrollOffset[0];
+                        mNestedOffsets[1] += mScrollOffset[1];
+                    }
+                    if (mInterralScrollOffset[0] != 0 && mInterralScrollOffset[1] != 0) {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -470,7 +469,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
         }
     };
 
-    protected boolean needDispathNestedPreScroll(int initdx, int initdy){
+    protected boolean needDispathNestedPreScroll(int initdx, int initdy) {
         return true;
     }
 

@@ -3,27 +3,26 @@ package com.part.basemoudle;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.button.MaterialButton;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bilibili.boxing.model.entity.impl.ImageMedia;
+import com.liux.android.boxing.Boxinger;
+import com.liux.android.boxing.OnCancelListener;
+import com.liux.android.boxing.OnMultiSelectListener;
 import com.liux.android.permission.Authorizer;
 import com.liux.android.permission.Continue;
 import com.liux.android.permission.OnContinueListener;
 import com.liux.android.permission.runtime.OnRuntimePermissionListener;
-import com.part.common.Util.Rx.LifeObserver;
-import com.part.common.Util.Rx.Utils.RxSchedulers;
-import com.part.common.Util.ToastUtil;
+import com.part.common.util.boxing.FixedBoxing;
+import com.part.common.util.rx.LifeObserver;
+import com.part.common.util.rx.Utils.RxSchedulers;
+import com.part.common.util.ToastUtil;
 import com.part.common.ui.activity.BaseMvpActivity;
-import com.part.common.ui.widget.Scrolling.MixScroll.ElasticProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling;
-import com.part.common.ui.widget.Scrolling.MixScroll.NestedRefreshProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.RefreshProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.SimpleHeaderFooter;
-import com.part.common.ui.widget.Scrolling.ScrollDirection;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -58,15 +57,17 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
         findViewById(R.id.ccc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 re();
                 ToastUtil.showToast("xccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
             }
         });
+        FixedBoxing.init();
         mixscroll.setScrollProcess(new RefreshProcess(new SimpleHeaderFooter(this, true), new SimpleHeaderFooter(this, false)));
     }
 
     private void re() {
-        Authorizer.with(this).requestRuntime(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        Authorizer.with(this).requestRuntime(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
                 .listener(new OnContinueListener() {
                     @Override
                     public void onContinue(final Continue aContinue) {
@@ -88,6 +89,21 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
                 .listener(new OnRuntimePermissionListener() {
                     @Override
                     public void onRuntimePermission(List<String> allow, List<String> reject, List<String> prohibit) {
+                        FixedBoxing.with(ActivityTest.this)
+                                .multipleSelect(5)
+                                .useCamera(true)
+                                .listener(new OnCancelListener() {
+                                    @Override
+                                    public void onCancel() {
+
+                                    }
+                                })
+                                .listener(new OnMultiSelectListener() {
+                                    @Override
+                                    public void onMultiSelect(List<ImageMedia> imageMedias) {
+
+                                    }
+                                }).start();
                         new ShareAction(ActivityTest.this).setDisplayList(SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.SINA, SHARE_MEDIA.SMS, SHARE_MEDIA.EMAIL)
                                 .setCallback(new UMShareListener() {
                                     @Override
@@ -122,7 +138,6 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
     @Override
     protected void injectComponent() {
-
         DaggerTestComponent.builder().activityComponent(activityComponent)
                 .testModule(new TestModule(this))
                 .build().inject(this);
@@ -130,12 +145,14 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
     @OnClick({R2.id.xxx_textview})
     public void onViewClicked() {
-        Net.creatService(IService.class).getData("0").compose(RxSchedulers.compose())
-                .subscribe(new LifeObserver<Object>(this,true) {
-                    @Override
-                    public void onNext(Object s) {
-                        ToastUtil.showToast(s.toString());
-                    }
-                });
+
+
+//        Net.creatService(IService.class).getData("0").compose(RxSchedulers.compose())
+//                .subscribe(new LifeObserver<Object>(this,true) {
+//                    @Override
+//                    public void onNext(Object s) {
+//                        ToastUtil.showToast(s.toString());
+//                    }
+//                });
     }
 }

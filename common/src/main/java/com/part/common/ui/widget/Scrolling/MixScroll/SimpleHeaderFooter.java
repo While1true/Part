@@ -129,7 +129,7 @@ public class SimpleHeaderFooter extends FrameLayout implements Refreshable {
 
     @Override
     public int canPullSpace() {
-        return SizeUtil.dp2px(context, 70);
+        return SizeUtil.dp2px(context, 200);
     }
 
     @Override
