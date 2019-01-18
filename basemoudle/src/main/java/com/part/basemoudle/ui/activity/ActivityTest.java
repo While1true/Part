@@ -3,6 +3,7 @@ package com.part.basemoudle.ui.activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.part.basemoudle.injection.component.DaggerTestComponent;
 import com.part.basemoudle.injection.module.TestModule;
 import com.part.basemoudle.mvp.presenter.HelloPresenter;
 import com.part.common.ui.widget.Scrolling.MixScroll.OverscrollProcess;
+import com.part.common.ui.widget.Scrolling.MixScroll.RefreshAutoLoadingProcess;
 import com.part.common.util.boxing.FixedBoxing;
 import com.part.common.util.ToastUtil;
 import com.part.common.ui.activity.BaseMvpActivity;
@@ -70,7 +72,7 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
             }
         });
         FixedBoxing.init();
-        mixscroll.setScrollProcess(new OverscrollProcess());
+        mixscroll.setScrollProcess(new RefreshAutoLoadingProcess(new SimpleHeaderFooter(this),new SimpleHeaderFooter(this,false)));
     }
 
     private void re() {

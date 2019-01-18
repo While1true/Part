@@ -28,14 +28,14 @@ public class OverscrollProcess extends RefreshProcess {
     public void onHeader(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling, boolean y) {
         this.fling=fling;
         super.onHeader(mixScrolling, remain, scrolledXY, supportFling?false:fling, y);
-        stopFlingScroll(mixScrolling);
+//        stopFlingScroll(mixScrolling);
     }
 
     @Override
     public void onFootor(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling, boolean y) {
         this.fling=fling;
         super.onFootor(mixScrolling, remain, scrolledXY, supportFling?false:fling, y);
-        stopFlingScroll(mixScrolling);
+//        stopFlingScroll(mixScrolling);
     }
     private void stopFlingScroll(MixScrolling mixScrolling) {
         if(supportFling&&fling){

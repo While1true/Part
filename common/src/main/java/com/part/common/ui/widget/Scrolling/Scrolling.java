@@ -313,7 +313,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
             if (mScroller == null) {
                 mScroller = new OverScroller(getContext(), sQuinticInterpolator);
             }
-            mScroller.fling(0, 0, vx, vy, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            mScroller.fling(0, 0, vx, vy, getMinFlingDistance(), getMaxFlingDistance(), getMinFlingDistance(), getMaxFlingDistance());
             startNestedScroll(getAxis(), ViewCompat.TYPE_NON_TOUCH);
             setScrollState(SCROLL_STAT_SCROLLING);
 
@@ -473,4 +473,10 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
         return true;
     }
 
+    protected int getMaxFlingDistance(){
+        return Integer.MAX_VALUE;
+    }
+    protected int getMinFlingDistance(){
+        return Integer.MIN_VALUE;
+    }
 }

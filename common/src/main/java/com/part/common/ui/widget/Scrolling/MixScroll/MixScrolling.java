@@ -15,6 +15,7 @@ import com.part.common.ui.widget.Scrolling.MixScroll.Base.OnScrollStateListener;
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.RefreshMode;
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.RefreshState;
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.Refreshable;
+import com.part.common.ui.widget.Scrolling.MixScroll.Base.SizeUtil;
 import com.part.common.ui.widget.Scrolling.ScrollDirection;
 import com.part.common.ui.widget.Scrolling.Scrolling;
 
@@ -425,7 +426,16 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
 
     @Override
     protected boolean needDispathNestedPreScroll(int initdx, int initdy) {
-        int d=direction==ScrollDirection.X?initdx:initdy;
         return getScroll()==0;
+    }
+
+    @Override
+    protected int getMaxFlingDistance() {
+     return ScrollUtil.getCanScrollDistanceToBottom(scrollContent, direction)+footer.canPullSpace();
+    }
+
+    @Override
+    protected int getMinFlingDistance() {
+        return -(ScrollUtil.getCanScrollDistanceToTop(scrollContent, direction)+header.canPullSpace());
     }
 }
