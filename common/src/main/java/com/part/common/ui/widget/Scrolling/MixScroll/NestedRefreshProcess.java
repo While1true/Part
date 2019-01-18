@@ -1,6 +1,9 @@
 package com.part.common.ui.widget.Scrolling.MixScroll;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.IScrollProcess;
@@ -17,6 +20,7 @@ import com.part.common.ui.widget.Scrolling.MixScroll.Base.Refreshable;
 public class NestedRefreshProcess implements IScrollProcess {
     private Refreshable header, footer;
     private AppBarLayoutState state = AppBarLayoutState.EXPANDED;
+    private AppBarLayout appBarLayout;
     AppBarLayout.OnOffsetChangedListener listener = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
@@ -31,17 +35,24 @@ public class NestedRefreshProcess implements IScrollProcess {
     };
 
     public NestedRefreshProcess(AppBarLayout layout) {
-        layout.addOnOffsetChangedListener(listener);
+       this(null,null,layout);
     }
 
-    public NestedRefreshProcess(Refreshable header, Refreshable footer, AppBarLayout layout) {
+
+    public NestedRefreshProcess(Refreshable header, Refreshable footer,AppBarLayout layout) {
         this.header = header;
         this.footer = footer;
-        layout.addOnOffsetChangedListener(listener);
+        appBarLayout=layout;
+        if(appBarLayout!=null){
+            appBarLayout.addOnOffsetChangedListener(listener);
+        }
     }
 
     @Override
     public void onHeader(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling, boolean y) {
+        if(appBarLayout==null){
+            setupAppbarListener(mixScrolling);
+        }
         if (y) {
             onHeaderVirtical(mixScrolling, remain, scrolledXY, fling);
         } else {
@@ -49,8 +60,12 @@ public class NestedRefreshProcess implements IScrollProcess {
         }
     }
 
+
     @Override
     public void onFootor(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling, boolean y) {
+        if(appBarLayout==null){
+            setupAppbarListener(mixScrolling);
+        }
         if (y) {
             onFooterVirtical(mixScrolling, remain, scrolledXY, fling);
         } else {
@@ -70,9 +85,13 @@ public class NestedRefreshProcess implements IScrollProcess {
 
 
     private void onHeaderVirtical(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
-        if (mixScrolling.getRefreshState() == RefreshState.LOADING||(remain<0&&state!=AppBarLayoutState.EXPANDED))
-            return;
         boolean refreshing = mixScrolling.getRefreshState() == RefreshState.REFRESHING;
+        if (mixScrolling.getRefreshState() == RefreshState.LOADING || (remain < 0 && state != AppBarLayoutState.EXPANDED && !refreshing))
+            return;
+        //正在刷新时先 上滑dispach
+        if (refreshing && state != AppBarLayoutState.COLLAPSED && remain > 0) {
+            return;
+        }
         if (!refreshing && fling) {
             return;
         }
@@ -98,10 +117,13 @@ public class NestedRefreshProcess implements IScrollProcess {
     }
 
     private void onHeaderHoriztional(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
-
-        if (mixScrolling.getRefreshState() == RefreshState.LOADING||(remain<0&&state!=AppBarLayoutState.EXPANDED))
-            return;
         boolean refreshing = mixScrolling.getRefreshState() == RefreshState.REFRESHING;
+        if (mixScrolling.getRefreshState() == RefreshState.LOADING || (remain < 0 && state != AppBarLayoutState.EXPANDED && !refreshing))
+            return;
+
+        if (refreshing && state != AppBarLayoutState.COLLAPSED && remain > 0) {
+            return;
+        }
         if (!refreshing && fling) {
             return;
         }
@@ -183,7 +205,23 @@ public class NestedRefreshProcess implements IScrollProcess {
 
 
     }
-
+    private void setupAppbarListener(MixScrolling mixScrolling){
+        ViewGroup parent= (ViewGroup) mixScrolling.getParent();
+        while (!(parent instanceof CoordinatorLayout)&&parent!=null){
+            parent= (ViewGroup) parent.getParent();
+        }
+        if(parent!=null && parent instanceof CoordinatorLayout){
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+                if(child instanceof AppBarLayout){
+                    appBarLayout= (AppBarLayout) child;
+                    appBarLayout.addOnOffsetChangedListener(listener);
+                    break;
+                }
+            }
+        }
+    }
     @Override
     public RefreshMode getMode() {
         return RefreshMode.NORMAL;

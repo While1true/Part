@@ -235,9 +235,9 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                         mNestedOffsets[0] += mScrollOffset[0];
                         mNestedOffsets[1] += mScrollOffset[1];
                     }
-                    if (mInterralScrollOffset[0] != 0 && mInterralScrollOffset[1] != 0) {
-                        getParent().requestDisallowInterceptTouchEvent(true);
-                    }
+//                    if (mInterralScrollOffset[0] != 0 && mInterralScrollOffset[1] != 0) {
+//                        getParent().requestDisallowInterceptTouchEvent(true);
+//                    }
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -254,7 +254,7 @@ public abstract class Scrolling extends FrameLayout implements NestedScrollingCh
                 mActivePointerId = INVALID_POINTER;
                 eventAddedToVelocityTracker = true;
                 mVelocityTracker.addMovement(vtev);
-                mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
+                mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity/2);
                 onFlingXY(direction == ScrollDirection.Y ? 0 : (int) -mVelocityTracker.getXVelocity(), direction == ScrollDirection.X ? 0 : (int) -mVelocityTracker.getYVelocity());
                 mVelocityTracker.clear();
                 stopNestedScroll(ViewCompat.TYPE_TOUCH);

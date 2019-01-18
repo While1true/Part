@@ -1,166 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-        <!--android:id="@+id/appbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="300dp"-->
-            <!--app:layout_scrollFlags="scroll">-->
-
-        <!--</LinearLayout>-->
-    <!--</android.support.design.widget.AppBarLayout>-->
-
-    <com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling
-        android:id="@+id/mixscroll"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/nestedRefreshBehavior">
 
-       <ScrollView
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="vertical"
-               android:tag="scroll">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+            app:contentScrim="#ff4070"
+            app:expandedTitleGravity="center_horizontal|bottom"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="lffffffffffffv"
+            app:titleEnabled="true">
 
-               <TextView
-                   android:id="@+id/xxx_textview"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="2522" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_boxing_checked"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.6"
+                app:layout_scrollFlags="scroll"></ImageView>
 
-               <Button
-                   android:id="@+id/ccc"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="ffffffxxxxxxxxxfffff" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:collapseIcon="@drawable/ic_boxing_checked"
+                app:layout_collapseMode="pin"
+                app:title="zzzzzzzzzzzzzzz">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="222"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.Toolbar>
 
-               <Button
-                   android:id="@+id/ccc2"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vvvvvvvv" />
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vvvvvvvv" />
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vvvvvvvv" />
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vvvvvvvv" />
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+        </android.support.design.widget.TabLayout>
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+    </android.support.design.widget.AppBarLayout>
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
+    <android.support.v4.view.ViewPager
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/viewpagr"
+        android:nestedScrollingEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-
-               <android.support.design.button.MaterialButton
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="fffffffffff" />
-           </LinearLayout>
-       </ScrollView>
-    </com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling>
-
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

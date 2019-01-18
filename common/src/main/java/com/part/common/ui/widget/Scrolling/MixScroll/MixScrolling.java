@@ -3,6 +3,7 @@ package com.part.common.ui.widget.Scrolling.MixScroll;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.view.ScrollingView;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -193,6 +194,10 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         addViewInteral(iScrollProcess);
     }
 
+    public IScrollProcess getiScrollProcess() {
+        return iScrollProcess;
+    }
+
     private void addViewInteral(IScrollProcess iScrollProcess) {
         Refreshable header = iScrollProcess.getHeader(this);
         Refreshable footer = iScrollProcess.getFooter(this);
@@ -231,6 +236,9 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                     scrollContent=child;
                 }
             }
+        }
+        if(scrollContent!=null){
+            ViewCompat.setNestedScrollingEnabled(scrollContent,false);
         }
     }
 
@@ -424,18 +432,31 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         }
     }
 
+    /**
+     * 控制nestedRefresh
+     * @param initdx
+     * @param initdy
+     * @return
+     */
     @Override
     protected boolean needDispathNestedPreScroll(int initdx, int initdy) {
+        if(refreshType==RefreshMode.NORMAL&&refreshState==RefreshState.REFRESHING){
+            return true;
+        }
         return getScroll()==0;
     }
 
     @Override
     protected int getMaxFlingDistance() {
+        if(refreshType==RefreshMode.NORMAL)
+            return super.getMaxFlingDistance();
      return ScrollUtil.getCanScrollDistanceToBottom(scrollContent, direction)+footer.canPullSpace();
     }
 
     @Override
     protected int getMinFlingDistance() {
+        if(refreshType==RefreshMode.NORMAL)
+            return super.getMinFlingDistance();
         return -(ScrollUtil.getCanScrollDistanceToTop(scrollContent, direction)+header.canPullSpace());
     }
 }
