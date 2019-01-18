@@ -5,6 +5,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.IScrollProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.RefreshMode;
@@ -208,7 +209,12 @@ public class NestedRefreshProcess implements IScrollProcess {
     private void setupAppbarListener(MixScrolling mixScrolling){
         ViewGroup parent= (ViewGroup) mixScrolling.getParent();
         while (!(parent instanceof CoordinatorLayout)&&parent!=null){
-            parent= (ViewGroup) parent.getParent();
+            ViewParent tempParent = parent.getParent();
+            if(tempParent instanceof ViewGroup){
+               parent= (ViewGroup)tempParent ;
+           }else {
+               break;
+           }
         }
         if(parent!=null && parent instanceof CoordinatorLayout){
             int childCount = parent.getChildCount();

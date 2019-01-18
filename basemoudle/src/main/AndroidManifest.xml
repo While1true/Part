@@ -2,11 +2,6 @@
     package="com.part.basemoudle" >
     <application>
         <activity android:name="com.part.basemoudle.ui.activity.ActivityTest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 </manifest>

@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
 import com.liux.android.boxing.OnCancelListener;
 import com.liux.android.boxing.OnMultiSelectListener;
@@ -42,6 +43,7 @@ import butterknife.ButterKnife;
  * <p>
  * life is short , bugs are too many!
  */
+@Route(path = "/test/main")
 public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
 

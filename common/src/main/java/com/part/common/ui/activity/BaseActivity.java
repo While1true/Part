@@ -18,7 +18,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityUtils.addActivity(this);
-        setContentView(getLayoutId());
+        int layoutId = getLayoutId();
+        if(layoutId!=0) {
+            setContentView(layoutId);
+        }
         initInjection();
         initView();
         initData(savedInstanceState);
