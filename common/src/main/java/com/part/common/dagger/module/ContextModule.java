@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 
+import com.datemodule.greendao.DaoSession;
+import com.part.common.ui.BaseApp;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -14,12 +17,17 @@ import dagger.Provides;
  */
 @Module
 public class ContextModule {
-    Context context;
+    Application context;
     public ContextModule(Application context){
         this.context=context;
     }
     @Provides
     Context AppContext(){
         return context;
+    }
+
+    @Provides
+    DaoSession provideDao(){
+        return ((BaseApp)context).getDaoSession();
     }
 }

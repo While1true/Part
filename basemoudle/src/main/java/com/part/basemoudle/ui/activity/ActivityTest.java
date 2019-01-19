@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
+import com.datemodule.greendao.DaoSession;
 import com.liux.android.boxing.OnCancelListener;
 import com.liux.android.boxing.OnMultiSelectListener;
 import com.liux.android.permission.Authorizer;
@@ -27,6 +28,7 @@ import com.part.basemoudle.injection.component.DaggerTestComponent;
 import com.part.basemoudle.injection.module.TestModule;
 import com.part.basemoudle.mvp.presenter.HelloPresenter;
 import com.part.basemoudle.ui.fragment.TestFragment;
+import com.part.common.util.ToastUtil;
 import com.part.common.util.boxing.FixedBoxing;
 import com.part.common.ui.activity.BaseMvpActivity;
 import com.umeng.socialize.ShareAction;
@@ -34,6 +36,8 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,16 +47,19 @@ import butterknife.ButterKnife;
  * <p>
  * life is short , bugs are too many!
  */
-@Route(path = "/test/main")
+@Route(path = "/module/ac")
 public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
 
     @BindView(R2.id.viewpagr)
     ViewPager viewPager;
+    @Inject
+    DaoSession daoSession;
 
     @Override
     protected void initData(Bundle savedInstanceState) {
 //        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new TestFragment()).commit();
+        ToastUtil.showSuccessToast(daoSession.getStudentDao().loadAll().toString());
     }
 
     @Override
@@ -62,7 +69,7 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
 
         FixedBoxing.init();
 
-        CollapsingToolbarLayout layout=findViewById(R.id.collaps);
+        CollapsingToolbarLayout layout = findViewById(R.id.collaps);
         layout.setTitle("测试无疑问");
         //通过CollapsingToolbarLayout修改字体颜色
         layout.setExpandedTitleColor(Color.WHITE);//设置还没收缩时状态下字体颜色
@@ -83,16 +90,16 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
-                return "title"+position;
+                return "title" + position;
             }
         });
-        TabLayout tabLayout=findViewById(R.id.tablayout);
+        TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setOffscreenPageLimit(4);
     }
 
     private void re() {
-        Authorizer.with(this).requestRuntime(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+        Authorizer.with(this).requestRuntime(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .listener(new OnContinueListener() {
                     @Override
                     public void onContinue(final Continue aContinue) {

@@ -25,6 +25,8 @@ android {
         buildConfigField 'String', 'QQKey', String.valueOf(rootProject.ext.keys["QQKey"])
         buildConfigField 'String', 'QQSecret', String.valueOf(rootProject.ext.keys["QQSecret"])
 
+        buildConfigField 'String', 'dbName', String.valueOf(rootProject.ext.databaseName)
+
         //Arouter路由配置
         javaCompileOptions {
             annotationProcessorOptions {
@@ -117,10 +119,9 @@ dependencies {
     api rootProject.ext.dependencies["pay"]
     api rootProject.ext.dependencies["qr"]
     api rootProject.ext.dependencies["permission"]
-    api (rootProject.ext.dependencies["boxing"]){
-        exclude group: 'com.liux.android',module: 'glide'
+    api(rootProject.ext.dependencies["boxing"]) {
+        exclude group: 'com.liux.android', module: 'glide'
     }
-
     api rootProject.ext.dependencies["proguard"]
-
+    api project(':datemodule')
 }

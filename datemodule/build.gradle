@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.greenrobot.greendao'
+android {
+    compileSdkVersion rootProject.ext.versions.compileSdkVersion
+    buildToolsVersion rootProject.ext.versions.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.versions.minSdkVersion
+        targetSdkVersion rootProject.ext.versions.targetSdkVersion
+        versionCode rootProject.ext.versions.versionCode
+        versionName rootProject.ext.versions.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //MultiDex分包方法
+        multiDexEnabled true
+
+    }
+
+}
+
+greendao {
+    schemaVersion rootProject.ext.databaseVersion//数据库版本号
+    daoPackage 'com.datemodule.greendao'//设置DaoMaster、DaoSession、Dao包名
+    targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录
+    //targetGenDirTest：设置生成单元测试目录
+    //generateTests：设置自动生成单元测试用例
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //公用依赖包
+    //GreenDao
+    if (rootProject.ext.isNeedGreenDao.toBoolean()) {
+        api rootProject.ext.dependencies["greenDao"]
+    }
+}

@@ -1,11 +1,12 @@
 ext {
     isModule = false//业务组件单独运行或组合运行
 
-    isNeedGreenDao = false
+    isNeedGreenDao = true
     isNeedDagger = true
     isNeedEventBus = false
     isNeedUMengShare = true
-
+    databaseVersion=1
+    databaseName='"part.db"'
     sign = [
             keyAlias     : "123",
             keyPassword  : "123456",

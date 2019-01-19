@@ -5,14 +5,20 @@ import android.app.Application;
 import android.content.Context;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.datemodule.greendao.DaoSession;
+import com.datemodule.greendao.ParentDao;
+import com.datemodule.greendao.StudentDao;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.part.common.BuildConfig;
 import com.part.common.util.AppContext;
 import com.part.common.util.AutoScreenUtils;
+import com.part.common.util.MigrationHelper;
 import com.part.common.util.ToastUtil;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
+
+import org.greenrobot.greendao.AbstractDao;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -24,6 +30,8 @@ import cn.jpush.android.api.JPushInterface;
  */
 public abstract class BaseApp extends Application {
 
+    private DaoSession daoSession;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,11 +41,11 @@ public abstract class BaseApp extends Application {
 
             AppContext.init(this);
 
-            ARouter.init(this);
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {//放在init后会导致找不到path
                 ARouter.openDebug();
                 ARouter.openLog();
             }
+            ARouter.init(this);
 
             AutoScreenUtils.AdjustDensity(this);
             ToastUtil.init();
@@ -53,6 +61,9 @@ public abstract class BaseApp extends Application {
             }
             JPushInterface.setDebugMode(BuildConfig.DEBUG);
             JPushInterface.init(this);
+
+            daoSession=MigrationHelper.init(this, ParentDao.class,StudentDao.class);
+
             init();
 
         }
@@ -77,4 +88,7 @@ public abstract class BaseApp extends Application {
         return processName;
     }
 
+    public DaoSession getDaoSession(){
+        return daoSession;
+    }
 }

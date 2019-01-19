@@ -5,6 +5,7 @@ import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
+import com.datemodule.greendao.DaoSession;
 import com.part.common.dagger.annotation.ActivityScope;
 import com.part.common.dagger.module.ActivityModule;
 import com.part.common.dagger.module.ContextModule;
@@ -26,4 +27,6 @@ public interface ActivityComponent {
     Activity getActivity();
 
     FragmentManager getFragmentManager();
+
+    DaoSession getDaoSession();
 }

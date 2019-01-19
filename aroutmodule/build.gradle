@@ -1,0 +1,14 @@
+apply from:rootProject.file('moduleConfig.gradle')
+android {
+
+    defaultConfig {
+        if (rootProject.ext.isModule) {
+            applicationId "xxx.xxx.xxx2"
+        }
+    }
+
+
+    //规定资源命名前缀为player_
+    resourcePrefix "xxx2_"
+
+}
