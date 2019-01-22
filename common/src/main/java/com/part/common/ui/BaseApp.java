@@ -1,10 +1,9 @@
 package com.part.common.ui;
 
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.liux.android.util.AppUtil;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.part.common.BuildConfig;
@@ -27,17 +26,18 @@ public abstract class BaseApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (getPackageName().equals(getCurrentProcessName(this))) {
+        if (AppUtil.isMainProcess(this)) {
 
             Logger.addLogAdapter(new AndroidLogAdapter());
 
             AppContext.init(this);
 
-            ARouter.init(this);
             if (BuildConfig.DEBUG) {
                 ARouter.openDebug();
                 ARouter.openLog();
             }
+            ARouter.init(this);
+
 
             AutoScreenUtils.AdjustDensity(this);
             ToastUtil.init();
@@ -60,21 +60,5 @@ public abstract class BaseApp extends Application {
     }
 
     protected abstract void init();
-
-    /**
-     * 获取当前进程名
-     */
-    private static String getCurrentProcessName(Application application) {
-        int pid = android.os.Process.myPid();
-        String processName = "";
-        ActivityManager manager = (ActivityManager) application.getApplicationContext().getSystemService
-                (Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
-            if (process.pid == pid) {
-                processName = process.processName;
-            }
-        }
-        return processName;
-    }
 
 }

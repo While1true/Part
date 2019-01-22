@@ -1,6 +1,5 @@
 package com.part.common.ui.widget.Scrolling.MixScroll;
 
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.View;

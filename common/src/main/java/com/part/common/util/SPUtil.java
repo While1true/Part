@@ -11,9 +11,9 @@ import android.content.SharedPreferences;
  * Created by 不听话的好孩子 on 2018/4/8.
  */
 
-public class SaveUtil {
+public class SPUtil {
 
-    private SaveUtil() {
+    private SPUtil() {
     }
 
     public static void save(String key, Object obj) {
