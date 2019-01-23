@@ -1,4 +1,4 @@
-package com.part.common.ui.widget.Indicate;
+package com.part.common.ui.widget.ViewPager.Indicate;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,33 +11,32 @@ import com.part.common.ui.widget.Scrolling.MixScroll.Base.SizeUtil;
  * <p>
  * life is short , bugs are too many!
  */
-public class NumberIndicate implements IIndicateDrawer {
+public class RoundRectIndicate implements IIndicateDrawer {
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Indicate indicate;
     private int[] size = new int[2];
+    int WIDTH = 9;
+    int HEIGHT = 4;
     RectF rectF = new RectF();
     int current, maxCount;
 
-    int RADIUS;
+    int WIDTHPX;
+    int HEIGHTPX;
 
-    public NumberIndicate() {
+    public RoundRectIndicate() {
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        mPaint.setColor(indicate.getResources().getColor(android.R.color.darker_gray)&0x80FFFFFF);
-        canvas.drawCircle(RADIUS, RADIUS, RADIUS, mPaint);
-
-
-        /**
-         * 计算基线位置
-         */
-        String text = current + "/" + maxCount;
-        Paint.FontMetrics fm = mPaint.getFontMetrics();
-        float baseLineY = RADIUS - (fm.ascent - (fm.ascent - fm.descent) / 2);
-        float v = mPaint.measureText(text);
+        mPaint.setColor(indicate.getResources().getColor(android.R.color.darker_gray));
+        int gap = WIDTHPX / 3;
+        for (int i = 0; i < maxCount; i++) {
+            rectF.set(gap * (i + 1)+WIDTHPX*i, 0, gap * (i + 1) + WIDTHPX*(i+1), HEIGHTPX);
+            canvas.drawRoundRect(rectF, HEIGHTPX / 2, HEIGHTPX / 2, mPaint);
+        }
         mPaint.setColor(indicate.getResources().getColor(android.R.color.white));
-        canvas.drawText(text, RADIUS - v / 2, baseLineY, mPaint);
+        rectF.set(gap * (current + 1)+WIDTHPX*current, 0, gap * (current + 1) + + WIDTHPX*(current+1), HEIGHTPX);
+        canvas.drawRoundRect(rectF, HEIGHTPX / 2, HEIGHTPX / 2, mPaint);
     }
 
     @Override
@@ -49,11 +48,10 @@ public class NumberIndicate implements IIndicateDrawer {
     @Override
     public int[] onMeasure(Indicate indicate, int widthMeasureSpec, int heightMeasureSpec) {
         this.indicate = indicate;
-        mPaint.setTextSize(SizeUtil.dp2px(indicate.getContext(), 17));
-        int width = (int) mPaint.measureText(maxCount + "/" + maxCount)+SizeUtil.dp2px(indicate.getContext(), 6);
-        RADIUS = width / 2 ;
-        size[0] = width;
-        size[1] = width;
+        WIDTHPX = SizeUtil.dp2px(indicate.getContext(), WIDTH);
+        HEIGHTPX = SizeUtil.dp2px(indicate.getContext(), HEIGHT);
+        size[0] = SizeUtil.dp2px(indicate.getContext(), maxCount * WIDTH + (maxCount + 1) * WIDTH / 3);
+        size[1] = SizeUtil.dp2px(indicate.getContext(), HEIGHT);
         return size;
     }
 
@@ -64,7 +62,7 @@ public class NumberIndicate implements IIndicateDrawer {
 
     @Override
     public void onPageSelected(int i) {
-        current = i % maxCount;
+        current = i%maxCount;
         indicate.invalidate();
     }
 

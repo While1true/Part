@@ -11,9 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
-import com.part.common.ui.widget.Scrolling.MixScroll.Base.IScrollProcess;
 import com.part.common.ui.widget.Scrolling.MixScroll.Base.RefreshState;
 import com.part.common.ui.widget.Scrolling.ScrollDirection;
 
@@ -34,7 +32,6 @@ public class MixBehavior extends AppBarLayout.Behavior implements ViewPager.OnPa
     private int mTouchSlop = new ViewConfiguration().getScaledTouchSlop();
     private MixScrolling mixScrolling;
     private ViewPager viewPager;
-    private AppBarLayout barLayout;
 
     public MixBehavior() {
         super();
@@ -46,13 +43,11 @@ public class MixBehavior extends AppBarLayout.Behavior implements ViewPager.OnPa
 
     @Override
     public boolean onInterceptTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
-//        if(onInterceptTouch(ev,child))return true;
         return super.onInterceptTouchEvent(parent, child, ev);
     }
 
     @Override
     public boolean onTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
-        this.barLayout = child;
         findMixScrollInCoordinatorLayout(parent, child);
         if (mixScrolling != null && mixScrolling.getRefreshState() != RefreshState.REFRESHING && onTouch(ev, child))
             return true;
@@ -121,7 +116,7 @@ public class MixBehavior extends AppBarLayout.Behavior implements ViewPager.OnPa
                 onPointerUp(ev);
                 break;
         }
-        return mIsDraging;
+        return true;
     }
 
     private void handleAnimation(MotionEvent ev) {
@@ -278,4 +273,5 @@ public class MixBehavior extends AppBarLayout.Behavior implements ViewPager.OnPa
     public void onPageScrollStateChanged(int i) {
 
     }
+
 }

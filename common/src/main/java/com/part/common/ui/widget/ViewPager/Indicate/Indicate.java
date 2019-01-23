@@ -1,10 +1,13 @@
-package com.part.common.ui.widget.Indicate;
+package com.part.common.ui.widget.ViewPager.Indicate;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.part.common.ui.widget.ViewPager.LoopFragmentPagerAdapter;
 
 /**
  * by ckckck 2019/1/22
@@ -45,7 +48,11 @@ public class Indicate extends View {
     public void setUpViewPager(ViewPager viewPager) {
         viewPager.addOnPageChangeListener(drawer);
         int currentItem = viewPager.getCurrentItem();
-        int count = viewPager.getAdapter().getCount();
+        PagerAdapter adapter = viewPager.getAdapter();
+        int count = adapter.getCount();
+        if(adapter instanceof LoopFragmentPagerAdapter){
+            count=((LoopFragmentPagerAdapter) adapter).getActualCount();
+        }
         drawer.initCount(currentItem, count);
     }
 }

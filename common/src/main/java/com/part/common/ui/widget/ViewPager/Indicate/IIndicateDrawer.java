@@ -1,4 +1,4 @@
-package com.part.common.ui.widget.Indicate;
+package com.part.common.ui.widget.ViewPager.Indicate;
 
 import android.graphics.Canvas;
 import android.support.v4.view.ViewPager;
