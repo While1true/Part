@@ -1,0 +1,172 @@
+1.删除com.liux.android.pay 下微信的重复包
+2.一维码要重新编译decodeHandler加入代码
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+package com.liux.android.qrcode.decode;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
+import com.liux.android.qrcode.QRCodeScanningFragment;
+import com.liux.android.qrcode.camrea.PreviewFrame;
+import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
+
+public class DecodeHandler extends Handler {
+    private boolean mCanRun;
+    private boolean mProcessing;
+    private int mLightnessIndex;
+    private float[] mLightnessList;
+    private DecodeCallback mDecodeCallback;
+    private MultiFormatReader mMultiFormatReader;
+    private byte[] mRotatedData;
+
+    public static DecodeHandler create(final DecodeCallback decodeCallback) {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final DecodeHandler[] decodeHandler = new DecodeHandler[1];
+        (new Thread(new Runnable() {
+            public void run() {
+                Looper.prepare();
+                decodeHandler[0] = new DecodeHandler(decodeCallback);
+                countDownLatch.countDown();
+                Looper.loop();
+            }
+        }, "Therad-Decoder")).start();
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException var4) {
+            ;
+        }
+
+        return decodeHandler[0];
+    }
+
+    private DecodeHandler(DecodeCallback decodeCallback) {
+        this.mCanRun = true;
+        this.mProcessing = false;
+        this.mLightnessIndex = 0;
+        this.mLightnessList = new float[]{1.0F, 1.0F, 1.0F};
+        this.mDecodeCallback = decodeCallback;
+        this.reset();
+    }
+
+    public void handleMessage(Message msg) {
+        if (this.mCanRun) {
+            this.mProcessing = true;
+            long time = System.currentTimeMillis();
+            PreviewFrame previewFrame = (PreviewFrame)msg.obj;
+            Result result = this.decode(previewFrame);
+            if (this.mCanRun && result != null) {
+                this.mCanRun = false;
+                this.mDecodeCallback.onDecodeResult(result);
+            }
+
+            float lightness = this.lightness(previewFrame);
+            this.mLightnessIndex %= this.mLightnessList.length;
+            this.mLightnessList[this.mLightnessIndex] = lightness;
+            ++this.mLightnessIndex;
+            if (this.mCanRun) {
+                this.mDecodeCallback.onLightness(this.mLightnessList);
+            }
+
+            if (QRCodeScanningFragment.DEBUG) {
+                Log.d("DecodeHandler", String.format("parsing frame: %dx%d, time: %dms, lightness: %s, text: %s", previewFrame.getWidth(), previewFrame.getHeight(), System.currentTimeMillis() - time, Arrays.toString(this.mLightnessList), result == null ? null : result.getText()));
+            }
+
+            this.mProcessing = false;
+        }
+    }
+
+    public void reset() {
+        this.mCanRun = true;
+        this.mMultiFormatReader = null;
+    }
+
+    public void resolve(PreviewFrame previewFrame) {
+        if (this.mCanRun && !this.mProcessing) {
+            Message message = this.obtainMessage();
+            message.obj = previewFrame;
+            this.sendMessage(message);
+        }
+    }
+
+    public void destroy() {
+        this.mCanRun = false;
+        this.getLooper().quit();
+    }
+
+    private Result decode(PreviewFrame previewFrame) {
+        Result result = null;
+        if (this.mMultiFormatReader == null) {
+            this.mMultiFormatReader = this.mDecodeCallback.onCreateReader();
+        }
+
+        this.rotate90(previewFrame);
+
+        try {
+            PlanarYUVLuminanceSource planarYUVLuminanceSource = new PlanarYUVLuminanceSource(previewFrame.getYuv(), previewFrame.getWidth(), previewFrame.getHeight(), 0, 0, previewFrame.getWidth(), previewFrame.getHeight(), false);
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(planarYUVLuminanceSource));
+            result = this.mMultiFormatReader.decodeWithState(binaryBitmap);
+        } catch (Exception var8) {
+            ;
+        } finally {
+            if (this.mMultiFormatReader != null) {
+                this.mMultiFormatReader.reset();
+            }
+
+        }
+
+        return result;
+    }
+
+    private void rotate90(PreviewFrame previewFrame) {
+        int width = previewFrame.getWidth();
+        int height = previewFrame.getHeight();
+        byte[] data = previewFrame.getYuv();
+        if (null == this.mRotatedData) {
+            this.mRotatedData = new byte[width * height];
+        } else if (this.mRotatedData.length < width * height) {
+            this.mRotatedData = new byte[width * height];
+        }
+
+        Arrays.fill(this.mRotatedData, (byte)0);
+
+        for(int y = 0; y < height; ++y) {
+            for(int x = 0; x < width && x + y * width < data.length; ++x) {
+                this.mRotatedData[x * height + height - y - 1] = data[x + y * width];
+            }
+        }
+
+        previewFrame.setYuv(this.mRotatedData);
+        previewFrame.setHeight(width);
+        previewFrame.setWidth(height);
+    }
+
+    private float lightness(PreviewFrame previewFrame) {
+        byte[] yuv = previewFrame.getYuv();
+        long pixeCount = (long)(previewFrame.getWidth() * previewFrame.getHeight());
+        if (Math.abs((float)yuv.length - (float)pixeCount * 1.5F) > 1.0E-5F) {
+            return 1.0F;
+        } else {
+            int step = 10;
+            long lightnessCount = 0L;
+
+            for(int i = 0; (long)i < pixeCount; i += step) {
+                lightnessCount += (long)yuv[i] & 255L;
+            }
+
+            long lightness = lightnessCount / (pixeCount / (long)step);
+            return (float)lightness / 255.0F;
+        }
+    }
+}
