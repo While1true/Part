@@ -1,6 +1,7 @@
 package com.part.basemoudle.injection.component;
 
 import com.part.basemoudle.ui.activity.ActivityTest;
+import com.part.basemoudle.ui.activity.FloorTestActivity;
 import com.part.basemoudle.ui.fragment.TestFragment;
 import com.part.basemoudle.injection.module.TestModule;
 import com.part.basemoudle.ui.fragment.TestFragment2;
@@ -17,6 +18,7 @@ import dagger.Component;
 @ComponentScope
 @Component(modules = {TestModule.class},dependencies = {ActivityComponent.class})
 public interface TestComponent {
+    void inject(FloorTestActivity activity);
     void inject(ActivityTest activityTest);
     void inject(TestFragment testFragment);
     void inject(TestFragment2 testFragment);

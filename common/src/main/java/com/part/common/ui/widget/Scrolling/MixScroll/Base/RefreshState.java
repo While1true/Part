@@ -6,5 +6,5 @@ package com.part.common.ui.widget.Scrolling.MixScroll.Base;
  * life is short , bugs are too many!
  */
 public enum RefreshState {
-    IDEL, PULL, SETTING, REFRESHING, LOADING
+    IDEL, PULL, SETTING, REFRESHING, LOADING,SECONDFLOOR
 }

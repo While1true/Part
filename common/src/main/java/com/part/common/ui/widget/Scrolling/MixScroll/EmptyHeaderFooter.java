@@ -75,8 +75,17 @@ public class EmptyHeaderFooter extends View implements Refreshable {
     }
 
     @Override
-    public int getRefreshSpace() {
+    public int canRefreshSpace() {
         return 0;
     }
 
+    @Override
+    public int secondFloorSpace() {
+        return 0;
+    }
+
+    @Override
+    public int canSecondFloorSpace() {
+        return 0;
+    }
 }

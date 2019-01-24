@@ -3,5 +3,6 @@
     <application>
         <activity android:name="com.part.basemoudle.ui.activity.ActivityTest">
         </activity>
+        <activity android:name=".ui.activity.FloorTestActivity"/>
     </application>
 </manifest>

@@ -3,6 +3,7 @@ package com.part.basemoudle.ui.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.part.basemoudle.R;
 import com.part.basemoudle.injection.component.DaggerTestComponent;
 import com.part.basemoudle.injection.module.TestModule;
@@ -34,7 +35,7 @@ public class TestFragment2 extends BaseMvpFragment<HelloPresenter> {
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showSuccessToast("cccccccccccccccc");
+                ARouter.getInstance().build("/testx/floor").navigation();
             }
         });
     }
