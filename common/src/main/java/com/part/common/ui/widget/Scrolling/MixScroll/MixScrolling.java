@@ -371,8 +371,9 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                     if (scroll != 0) {
                         if (processFloor) {
                             setRefreshState(RefreshState.SECONDFLOOR);
+                        }else {
+                            setRefreshState(scrollDistance < 0 ? RefreshState.REFRESHING : RefreshState.LOADING);
                         }
-                        setRefreshState(scrollDistance < 0 ? RefreshState.REFRESHING : RefreshState.LOADING);
                     } else {
                         setRefreshState(RefreshState.IDEL);
                     }

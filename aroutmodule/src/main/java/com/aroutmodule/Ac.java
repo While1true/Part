@@ -1,5 +1,6 @@
 package com.aroutmodule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -43,7 +44,8 @@ public class Ac extends BaseActivity {
     }
 
     public void hello(View view) {
-        ARouter.getInstance().build("/module/ac").navigation();
+//        startActivity(new Intent(this,SC.class));
+        ARouter.getInstance().build("/testx/main").navigation();
     }
 
     @Override

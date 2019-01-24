@@ -1,6 +1,7 @@
 package com.part.basemoudle.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ public class TestFragment extends BaseMvpFragment<HelloPresenter> {
         MixScrolling mixScrolling=rootView.findViewById(R.id.mixscroll);
         mixScrolling.setScrollProcess(new NestedRefreshProcess(new SimpleHeaderFooter(getContext()),new SimpleHeaderFooter(getContext(),false), null));
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        ViewCompat.setNestedScrollingEnabled(recyclerview,false);
         recyclerview.setAdapter(new MixAdapter(50)
         .addLifeOwener(this)
         .addType(android.R.layout.simple_list_item_1, new PositionHolder() {

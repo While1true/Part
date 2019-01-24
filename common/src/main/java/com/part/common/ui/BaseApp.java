@@ -17,8 +17,6 @@ import com.part.common.util.ToastUtil;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 
-import org.greenrobot.greendao.AbstractDao;
-
 import cn.jpush.android.api.JPushInterface;
 
 
@@ -68,6 +66,10 @@ public abstract class BaseApp extends Application {
 
         }
 
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
     }
 
     protected abstract void init();

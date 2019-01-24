@@ -108,11 +108,12 @@ public class ActivityTest extends BaseMvpActivity<HelloPresenter> {
         viewpagrT.setPageTransformer(false, new AlphaTransformer());
         new ViewPagerScroller(this).setupViewPager(viewpagrT);
 
+        final Fragment[]fragments=new Fragment[]{new TestFragment(),new TestFragment(),new TestFragment(),new TestFragment()};
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
 //                if(i==0)
-                return new TestFragment();
+                return fragments[i];
 //                else return new TestFragment2();
             }
 
