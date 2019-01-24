@@ -105,7 +105,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         return super.onTouchEvent(ev);
     }
 
-    void startAnimation() {
+    public void startAnimation() {
         if (valueAnimator.isRunning() || refreshState.ordinal() > 2)
             return;
         int scrollY = getScrollYY();
@@ -145,7 +145,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         }
     }
 
-    void cancelAnimation() {
+    public void cancelAnimation() {
         stopScroll();
         if (valueAnimator.isRunning()&&refreshState!=RefreshState.SETTING)
             valueAnimator.cancel();
@@ -254,7 +254,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     }
 
     @Override
-    protected void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
+    public void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
         if (direction == ScrollDirection.Y) {
             doScroll(deltaY, scrolledXY, fling, true);
         } else {

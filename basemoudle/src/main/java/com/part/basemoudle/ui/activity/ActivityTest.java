@@ -34,7 +34,6 @@ import com.part.basemoudle.mvp.presenter.HelloPresenter;
 import com.part.basemoudle.ui.fragment.TestFragment;
 import com.part.basemoudle.ui.fragment.TestFragment2;
 import com.part.common.ui.widget.RotateImage.RotateImageView;
-import com.part.common.ui.widget.Scrolling.MixScroll.MixBehavior;
 import com.part.common.ui.widget.ViewPager.AlphaTransformer;
 import com.part.common.ui.widget.ViewPager.Indicate.Indicate;
 import com.part.common.ui.widget.ViewPager.LoopFragmentPagerAdapter;
