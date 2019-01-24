@@ -60,6 +60,7 @@ ext {
             pay                     : "0.1.3",
             permission              : "0.1.4",
             boxing                  : "0.1.4",
+            util                    : "0.1.4",
 
             proguard                  : "0.0.10",
     ]
@@ -145,6 +146,7 @@ ext {
             "pay"                 : "com.liux.android:pay:${versions["pay"]}",
             "permission"          : "com.liux.android:permission:${versions["permission"]}",
             "boxing"              : "com.liux.android:boxing:${versions["boxing"]}",
+            "util"              : "com.liux.android:util:${versions["util"]}",
 
             "proguard"              : "com.blankj:free-proguard:${versions["proguard"]}",
 

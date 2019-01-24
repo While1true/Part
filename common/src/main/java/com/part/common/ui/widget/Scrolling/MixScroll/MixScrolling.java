@@ -77,8 +77,6 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (refreshState == RefreshState.SETTING)
-            return true;
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -87,6 +85,11 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
             case MotionEvent.ACTION_DOWN:
                 cancelAnimation();
                 break;
+        }
+        if (refreshState == RefreshState.SETTING)
+            return true;
+        if (refreshState == RefreshState.SECONDFLOOR) {
+            return false;
         }
         return super.onInterceptTouchEvent(ev);
     }
@@ -102,10 +105,17 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                 cancelAnimation();
                 break;
         }
+        if (refreshState == RefreshState.SETTING)
+            return false;
         return super.onTouchEvent(ev);
     }
-
-    void startAnimation() {
+    public void closeFloor(){
+        startAnimation(true);
+    }
+    public void startAnimation() {
+        startAnimation(false);
+    }
+    private void startAnimation(boolean closeFloor) {
         if (valueAnimator.isRunning() || refreshState.ordinal() > 2)
             return;
         int scrollY = getScrollYY();
@@ -123,17 +133,27 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
             } else {
                 stopScroll();
                 if (scroll < 0) {
-                    if (absScroll > header.getRefreshSpace()) {
-                        valueAnimator.setFloatValues(scroll, -header.getRefreshSpace());
-                        during = DURING * Math.abs((absScroll - header.getRefreshSpace())) / header.canPullSpace();
+                    int refreshSpace = header.canRefreshSpace();
+                    if (!closeFloor&&absScroll > refreshSpace) {
+                        if (absScroll > header.canSecondFloorSpace() && header.canSecondFloorSpace() > refreshSpace) {
+                            refreshSpace = header.secondFloorSpace();
+                            setRefreshState(RefreshState.SETTING);
+                        }
+                        valueAnimator.setFloatValues(scroll, -refreshSpace);
+                        during = DURING * Math.abs((absScroll - refreshSpace)) / header.canPullSpace();
                     } else {
                         valueAnimator.setFloatValues(scroll, 0);
                         during = DURING * absScroll / header.canPullSpace();
                     }
                 } else {
-                    if (absScroll > footer.getRefreshSpace()) {
-                        valueAnimator.setFloatValues(scroll, footer.getRefreshSpace());
-                        during = DURING * Math.abs((absScroll - footer.getRefreshSpace())) / footer.canPullSpace();
+                    int refreshSpace = footer.canRefreshSpace();
+                    if (!closeFloor&&absScroll > refreshSpace) {
+                        if (absScroll > footer.canSecondFloorSpace() && footer.canSecondFloorSpace() > refreshSpace) {
+                            refreshSpace = footer.secondFloorSpace();
+                            setRefreshState(RefreshState.SETTING);
+                        }
+                        valueAnimator.setFloatValues(scroll, refreshSpace);
+                        during = DURING * Math.abs((absScroll - refreshSpace)) / footer.canPullSpace();
                     } else {
                         valueAnimator.setFloatValues(scroll, 0);
                         during = DURING * absScroll / footer.canPullSpace();
@@ -145,9 +165,9 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         }
     }
 
-    void cancelAnimation() {
+    public void cancelAnimation() {
         stopScroll();
-        if (valueAnimator.isRunning()&&refreshState!=RefreshState.SETTING)
+        if (valueAnimator.isRunning() && refreshState != RefreshState.SETTING)
             valueAnimator.cancel();
     }
 
@@ -172,18 +192,18 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     }
 
     public void setRefreshing() {
-        if (refreshState == RefreshState.REFRESHING || header.getRefreshSpace() == 0) {
+        if (refreshState == RefreshState.REFRESHING || header.canRefreshSpace() == 0) {
             return;
         }
         cancelAnimation();
-        if(scrollContent instanceof RecyclerView){
+        if (scrollContent instanceof RecyclerView) {
             ((RecyclerView) scrollContent).scrollToPosition(0);
-        }else {
-            scrollContent.scrollTo(0,0);
+        } else {
+            scrollContent.scrollTo(0, 0);
         }
         setRefreshState(RefreshState.SETTING);
-        valueAnimator.setFloatValues(direction == ScrollDirection.Y ? -getScrollYY() : -getScrollXX(), -header.getRefreshSpace());
-        int during = DURING * header.getRefreshSpace() / header.canPullSpace();
+        valueAnimator.setFloatValues(direction == ScrollDirection.Y ? -getScrollYY() : -getScrollXX(), -header.canRefreshSpace());
+        int during = DURING * header.canRefreshSpace() / header.canPullSpace();
         valueAnimator.setDuration(during);
         valueAnimator.start();
     }
@@ -229,16 +249,16 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                     footer = (Refreshable) child;
                     footer.getContentView();
                 }
-            } else if (child instanceof ScrollingView ||"scroll".equals(child.getTag())) {
+            } else if (child instanceof ScrollingView || "scroll".equals(child.getTag())) {
                 scrollContent = child;
-            }else{
-                if(scrollContent==null){
-                    scrollContent=child;
+            } else {
+                if (scrollContent == null) {
+                    scrollContent = child;
                 }
             }
         }
-        if(scrollContent!=null){
-            ViewCompat.setNestedScrollingEnabled(scrollContent,false);
+        if (scrollContent != null) {
+            ViewCompat.setNestedScrollingEnabled(scrollContent, false);
         }
     }
 
@@ -254,7 +274,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     }
 
     @Override
-    protected void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
+    public void scrollXY(int deltaX, int deltaY, int[] scrolledXY, boolean fling) {
         if (direction == ScrollDirection.Y) {
             doScroll(deltaY, scrolledXY, fling, true);
         } else {
@@ -270,22 +290,24 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
             consumed = delta;
             if (y) {
                 scrollContent.scrollBy(0, consumed);
+                scrolledXY[1] = consumed;
             } else {
                 scrollContent.scrollBy(consumed, 0);
+                scrolledXY[0] = consumed;
             }
-            scrolledXY[1] = consumed;
+
         } else {
-            int scrolled = y ? getScrollYY() : getScrollXX();
+            int scrolled = getScroll();
             //头部
             if (scrolled < 0 || (scrolled == 0 && remain < 0)) {
                 iScrollProcess.onHeader(this, remain, scrolledXY, fling, y);
-                scrolled = y ? getScrollYY() : getScrollXX();
+                scrolled = getScroll();
                 header.onPull(-scrolled, fling);
             }
             //尾部
             else {
                 iScrollProcess.onFootor(this, remain, scrolledXY, fling, y);
-                scrolled = y ? getScrollYY() : getScrollXX();
+                scrolled = getScroll();
                 footer.onPull(scrolled, fling);
             }
         }
@@ -333,30 +355,46 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         } else {
             int scrollDistance = direction == ScrollDirection.Y ? backScroll[1] : backScroll[0];
             int scroll = (int) animatedValue;
-//            if(refreshType==RefreshMode.NORMAL) {
-//              scrollTo(direction == ScrollDirection.Y ? 0 : scroll, direction == ScrollDirection.X ? 0 : scroll);
-//            }else{
-            scrollXY(direction == ScrollDirection.Y ? 0 : scroll - getScrollXX(), direction == ScrollDirection.Y ? scroll - getScrollYY() : 0, tempArray, false);
-//            }
+            boolean processFloor = isProcessFloor(scrollDistance);
+            if (processFloor/*&&!closeFloor TODO*/) {
+                scrollTo(direction == ScrollDirection.Y ? 0 : scroll, direction == ScrollDirection.X ? 0 : scroll);
+            } else {
+                scrollXY(direction == ScrollDirection.Y ? 0 : scroll - getScrollXX(), direction == ScrollDirection.Y ? scroll - getScrollYY() : 0, tempArray, false);
+            }
             if (scrollDistance > 0) {
                 footer.onPull(Math.abs(scroll), false);
             } else {
                 header.onPull(Math.abs(scroll), false);
             }
+
             if (animatedFraction == 0) {
-                if (scroll != 0) {
-                    setRefreshState(scrollDistance < 0 ? RefreshState.REFRESHING : RefreshState.LOADING);
-                } else {
-                    setRefreshState(RefreshState.IDEL);
-                }
+                    if (scroll != 0) {
+                        if (processFloor) {
+                            setRefreshState(RefreshState.SECONDFLOOR);
+                        }
+                        setRefreshState(scrollDistance < 0 ? RefreshState.REFRESHING : RefreshState.LOADING);
+                    } else {
+                        setRefreshState(RefreshState.IDEL);
+                    }
             }
         }
+
+    }
+
+    private boolean isProcessFloor(int startScrollDistance) {
+        if (startScrollDistance < 0) {
+            return Math.abs(startScrollDistance) > header.canSecondFloorSpace() && header.canSecondFloorSpace() > header.canRefreshSpace();
+        } else if (startScrollDistance > 0) {
+            return Math.abs(startScrollDistance) > footer.canSecondFloorSpace() && footer.canSecondFloorSpace() > footer.canRefreshSpace();
+        }
+        return false;
+
     }
 
     //头尾部出来不调用fling,调用时停止动画
     @Override
     protected boolean canFling(int vx, int vy) {
-        if(refreshType!=RefreshMode.NORMAL) {
+        if (refreshType != RefreshMode.NORMAL) {
             int scroll = getScroll();
             if (scroll != 0)
                 return false;
@@ -367,6 +405,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
 
     /**
      * 根据direction返回该方向的scroll
+     *
      * @return
      */
     public int getScroll() {
@@ -434,29 +473,30 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
 
     /**
      * 控制nestedRefresh
+     *
      * @param initdx
      * @param initdy
      * @return
      */
     @Override
     protected boolean needDispathNestedPreScroll(int initdx, int initdy) {
-        if(refreshType==RefreshMode.NORMAL&&refreshState==RefreshState.REFRESHING){
+        if (refreshType == RefreshMode.NORMAL && refreshState == RefreshState.REFRESHING) {
             return true;
         }
-        return getScroll()==0;
+        return getScroll() == 0;
     }
 
     @Override
     protected int getMaxFlingDistance() {
-        if(refreshType==RefreshMode.NORMAL)
+        if (refreshType == RefreshMode.NORMAL)
             return super.getMaxFlingDistance();
-     return ScrollUtil.getCanScrollDistanceToBottom(scrollContent, direction)+footer.canPullSpace();
+        return ScrollUtil.getCanScrollDistanceToBottom(scrollContent, direction) + footer.canPullSpace();
     }
 
     @Override
     protected int getMinFlingDistance() {
-        if(refreshType==RefreshMode.NORMAL)
+        if (refreshType == RefreshMode.NORMAL)
             return super.getMinFlingDistance();
-        return -(ScrollUtil.getCanScrollDistanceToTop(scrollContent, direction)+header.canPullSpace());
+        return -(ScrollUtil.getCanScrollDistanceToTop(scrollContent, direction) + header.canPullSpace());
     }
 }

@@ -119,6 +119,7 @@ dependencies {
     api rootProject.ext.dependencies["pay"]
     api rootProject.ext.dependencies["qr"]
     api rootProject.ext.dependencies["permission"]
+    api rootProject.ext.dependencies["util"]
     api(rootProject.ext.dependencies["boxing"]) {
         exclude group: 'com.liux.android', module: 'glide'
     }

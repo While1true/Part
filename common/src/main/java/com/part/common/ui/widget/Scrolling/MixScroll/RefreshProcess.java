@@ -63,7 +63,7 @@ public class RefreshProcess implements IScrollProcess {
         int scrollY = mixScrolling.getScrollY();
         float strength = mixScrolling.getStrength();
         Refreshable header = mixScrolling.getHeader();
-        int canPullSpace = (fling||refreshing)?header.getRefreshSpace():header.canPullSpace();
+        int canPullSpace = (fling||refreshing)?header.canRefreshSpace():header.canPullSpace();
         //下滑
         if (remain < 0) {
             canPullSpace=Math.max(0,canPullSpace+scrollY);
@@ -92,7 +92,7 @@ public class RefreshProcess implements IScrollProcess {
         int scrollX = mixScrolling.getScrollX();
         float strength = mixScrolling.getStrength();
         Refreshable header = mixScrolling.getHeader();
-        int canPullSpace = (fling||refreshing)?header.getRefreshSpace():header.canPullSpace();
+        int canPullSpace = (fling||refreshing)?header.canRefreshSpace():header.canPullSpace();
         //下滑
         if (remain < 0) {
             canPullSpace=Math.max(0,canPullSpace+scrollX);
@@ -118,7 +118,7 @@ public class RefreshProcess implements IScrollProcess {
         int scrollY = mixScrolling.getScrollY();
         float strength = mixScrolling.getStrength();
         Refreshable footer = mixScrolling.getFooter();
-        int canPullSpace = (fling||loading)?footer.getRefreshSpace():footer.canPullSpace();
+        int canPullSpace = (fling||loading)?footer.canRefreshSpace():footer.canPullSpace();
         //下滑
         if (remain < 0) {
             int min = Math.min(scrollY, -remain);
@@ -147,7 +147,7 @@ public class RefreshProcess implements IScrollProcess {
         int scrollX = mixScrolling.getScrollX();
         float strength = mixScrolling.getStrength();
         Refreshable footer = mixScrolling.getFooter();
-        int canPullSpace = (fling||loading)?footer.getRefreshSpace():footer.canPullSpace();
+        int canPullSpace = (fling||loading)?footer.canRefreshSpace():footer.canPullSpace();
         //下滑
         if (remain < 0) {
             int min = Math.min(scrollX, -remain);

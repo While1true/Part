@@ -5,6 +5,12 @@ android {
         if (rootProject.ext.isModule) {
             applicationId "xxx.xxx.xxx"
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+                includeCompileClasspath = true
+            }
+        }
     }
 
 
