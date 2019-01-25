@@ -24,15 +24,19 @@ public class NestedRefreshProcess implements IScrollProcess {
     AppBarLayout.OnOffsetChangedListener listener = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-            if (i == 0) {
-                state = AppBarLayoutState.EXPANDED;
-            } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
-                state = AppBarLayoutState.COLLAPSED;
-            } else {
-                state = AppBarLayoutState.MIDDLE;
-            }
+            updateAppBarLayoutState(appBarLayout, i);
         }
     };
+
+    private void updateAppBarLayoutState(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            state = AppBarLayoutState.EXPANDED;
+        } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
+            state = AppBarLayoutState.COLLAPSED;
+        } else {
+            state = AppBarLayoutState.MIDDLE;
+        }
+    }
 
     public NestedRefreshProcess(AppBarLayout layout) {
        this(null,null,layout);
@@ -45,6 +49,8 @@ public class NestedRefreshProcess implements IScrollProcess {
         appBarLayout=layout;
         if(appBarLayout!=null){
             appBarLayout.addOnOffsetChangedListener(listener);
+            int topAndBottomOffset = getAppBarLayoutOffset();
+            updateAppBarLayoutState(appBarLayout, topAndBottomOffset);
         }
     }
 
@@ -86,10 +92,10 @@ public class NestedRefreshProcess implements IScrollProcess {
 
     private void onHeaderVirtical(MixScrolling mixScrolling, int remain, int[] scrolledXY, boolean fling) {
         boolean refreshing = mixScrolling.getRefreshState() == RefreshState.REFRESHING;
-        if (mixScrolling.getRefreshState() == RefreshState.LOADING || (remain < 0 && state != AppBarLayoutState.EXPANDED && !refreshing))
+        if (mixScrolling.getRefreshState() == RefreshState.LOADING || (remain < 0 && !refreshing && state != AppBarLayoutState.EXPANDED ))
             return;
         //正在刷新时先 上滑dispach
-        if (refreshing && state != AppBarLayoutState.COLLAPSED && remain > 0) {
+        if (refreshing && remain > 0 && state != AppBarLayoutState.COLLAPSED ) {
             return;
         }
         if (!refreshing && fling) {
@@ -222,11 +228,20 @@ public class NestedRefreshProcess implements IScrollProcess {
                 if(child instanceof AppBarLayout){
                     appBarLayout= (AppBarLayout) child;
                     appBarLayout.addOnOffsetChangedListener(listener);
+                    int topAndBottomOffset = getAppBarLayoutOffset();
+                    updateAppBarLayoutState(appBarLayout, topAndBottomOffset);
                     break;
                 }
             }
         }
     }
+
+    private int getAppBarLayoutOffset() {
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior= (AppBarLayout.Behavior) layoutParams.getBehavior();
+        return behavior.getTopAndBottomOffset();
+    }
+
     @Override
     public RefreshMode getMode() {
         return RefreshMode.NORMAL;

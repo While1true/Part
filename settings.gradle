@@ -1,1 +1,1 @@
-include ':app', ':common', ':basemoudle', ':aroutmodule', ':datemodule'
+include ':app', ':common', ':basemoudle', ':aroutmodule', ':datemodule', ':basemoudle2'

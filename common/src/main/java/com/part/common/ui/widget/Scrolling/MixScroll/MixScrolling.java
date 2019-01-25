@@ -71,12 +71,17 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (refreshState == RefreshState.SETTING)
-            return true;
+            return false;
         return super.dispatchTouchEvent(ev);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (refreshState == RefreshState.SETTING)
+            return true;
+        if (refreshState == RefreshState.SECONDFLOOR) {
+            return false;
+        }
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -85,17 +90,14 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
             case MotionEvent.ACTION_DOWN:
                 cancelAnimation();
                 break;
-        }
-        if (refreshState == RefreshState.SETTING)
-            return true;
-        if (refreshState == RefreshState.SECONDFLOOR) {
-            return false;
         }
         return super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (refreshState == RefreshState.SETTING)
+            return false;
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -105,8 +107,6 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                 cancelAnimation();
                 break;
         }
-        if (refreshState == RefreshState.SETTING)
-            return false;
         return super.onTouchEvent(ev);
     }
     public void closeFloor(){
@@ -116,7 +116,7 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         startAnimation(false);
     }
     private void startAnimation(boolean closeFloor) {
-        if (valueAnimator.isRunning() || refreshState.ordinal() > 2)
+        if (valueAnimator.isRunning() || (refreshState.ordinal() > 2&&!closeFloor))
             return;
         int scrollY = getScrollYY();
         int scrollX = getScrollXX();
