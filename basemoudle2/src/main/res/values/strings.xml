@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BaseMoudle</string>
+    <string name="nestedRefreshBehavior">com.part.common.ui.widget.Scrolling.MixScroll.MixBehavior</string>
+</resources>
