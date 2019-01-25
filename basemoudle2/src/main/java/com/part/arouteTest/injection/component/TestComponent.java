@@ -3,7 +3,7 @@ package com.part.arouteTest.injection.component;
 import com.part.arouteTest.ui.activity.ActivityTest;
 import com.part.arouteTest.ui.fragment.TestFragment;
 import com.part.arouteTest.injection.module.TestModule;
-import com.part.common.dagger.Component.ActivityComponent;
+import com.part.common.dagger.component.ActivityComponent;
 import com.part.common.dagger.annotation.ComponentScope;
 
 import dagger.Component;

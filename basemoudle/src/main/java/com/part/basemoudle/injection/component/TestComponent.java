@@ -5,7 +5,7 @@ import com.part.basemoudle.ui.activity.FloorTestActivity;
 import com.part.basemoudle.ui.fragment.TestFragment;
 import com.part.basemoudle.injection.module.TestModule;
 import com.part.basemoudle.ui.fragment.TestFragment2;
-import com.part.common.dagger.Component.ActivityComponent;
+import com.part.common.dagger.component.ActivityComponent;
 import com.part.common.dagger.annotation.ComponentScope;
 
 import dagger.Component;

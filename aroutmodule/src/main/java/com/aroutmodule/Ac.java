@@ -1,6 +1,5 @@
 package com.aroutmodule;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -8,10 +7,9 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.datemodule.Entry.Student;
 import com.datemodule.greendao.DaoSession;
-import com.part.common.dagger.Component.DaggerActivityComponent;
+import com.part.common.dagger.component.DaggerActivityComponent;
 import com.part.common.dagger.module.ActivityModule;
 import com.part.common.dagger.module.ContextModule;
-import com.part.common.ui.BaseApp;
 import com.part.common.ui.activity.BaseActivity;
 
 import java.util.Random;

@@ -1,7 +1,6 @@
 package com.aroutmodule;
 
-import com.part.common.dagger.Component.ActivityComponent;
-import com.part.common.dagger.annotation.ActivityScope;
+import com.part.common.dagger.component.ActivityComponent;
 import com.part.common.dagger.annotation.ComponentScope;
 
 import dagger.Component;

@@ -1,4 +1,7 @@
-package com.part.common.util.network;
+﻿package com.part.common.util.network;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -15,11 +18,12 @@ import java.util.Set;
  */
 
 public class HttpNet {
-    public static int LISTENER_PERIOD=500;
+    public static int LISTENER_PERIOD = 500;
 
     public static String get(String url) {
         return get(url, null);
     }
+
     public static String get(String url, Params params) {
         try {
             if (params != null) {
@@ -31,9 +35,9 @@ public class HttpNet {
             URL urlx = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlx.openConnection();
 
-            if(params!=null) {
+            if (params != null) {
                 for (Map.Entry<String, String> entry : params.headers.entrySet()) {
-                    connection.addRequestProperty(entry.getKey(),entry.getValue());
+                    connection.addRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
 
@@ -70,14 +74,17 @@ public class HttpNet {
             connection.setDoInput(true);
             connection.setUseCaches(false);
             connection.setInstanceFollowRedirects(true);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            if (params.contentType == ContentType.STRING)
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            else
+                connection.setRequestProperty("Content-Type", "application/json");
 
-            if(params!=null) {
+            if (params != null) {
                 for (Map.Entry<String, String> entry : params.headers.entrySet()) {
-                    connection.addRequestProperty(entry.getKey(),entry.getValue());
+                    connection.addRequestProperty(entry.getKey(), entry.getValue());
                 }
                 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-                outputStream.write(params.toParamsString().getBytes());
+                outputStream.write(params.contentType == ContentType.STRING ? params.toParamsString().getBytes() : params.toJsonString().getBytes());
                 outputStream.flush();
                 outputStream.close();
             }
@@ -116,13 +123,13 @@ public class HttpNet {
             connection.setUseCaches(false);
             connection.setInstanceFollowRedirects(true);
             connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-            if(params!=null) {
+            if (params != null) {
                 for (Map.Entry<String, String> entry : params.headers.entrySet()) {
-                    connection.addRequestProperty(entry.getKey(),entry.getValue());
+                    connection.addRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            if(params!=null) {
+            if (params != null) {
                 Set<Map.Entry<String, String>> entries = params.files.entrySet();
                 for (Map.Entry<String, String> entry : entries) {
                     String keyname = entry.getKey();
@@ -131,7 +138,7 @@ public class HttpNet {
                         outputStream.writeBytes(twoHyphens + boundary + end);
                         outputStream.writeBytes("Content-Disposition: form-data; " + "name=\"" + keyname + "\";filename=\"" + file.getName()
                                 + "\"" + end);
-                        outputStream.writeBytes("Content-Type: application/octet-stream; charset=utf-8"+end);
+                        outputStream.writeBytes("Content-Type: application/octet-stream; charset=utf-8" + end);
                         outputStream.writeBytes(end);
                         FileInputStream fStream = new FileInputStream(file);
                         int bufferSize = 2048;
@@ -147,7 +154,7 @@ public class HttpNet {
                             long temp = System.currentTimeMillis();
                             if (temp - lastTime > LISTENER_PERIOD || current == total) {
                                 if (listener != null) {
-                                    listener.call(current, total,(int)((current-last)/(temp - last)), keyname);
+                                    listener.call(current, total, (int) ((current - last) / (temp - last)), keyname);
                                 }
                                 lastTime = temp;
                                 last = current;
@@ -162,7 +169,7 @@ public class HttpNet {
                     outputStream.writeBytes(twoHyphens + boundary + end);
                     outputStream.writeBytes("Content-Disposition: form-data; " + "name=\"" + entry.getKey()
                             + "\"" + end);
-                    outputStream.writeBytes("Content-Type: text/plain; charset=utf-8"+end);
+                    outputStream.writeBytes("Content-Type: text/plain; charset=utf-8" + end);
                     outputStream.write(end.getBytes());
                     outputStream.write(entry.getValue().getBytes());
                     outputStream.write(end.getBytes());
@@ -220,12 +227,12 @@ public class HttpNet {
                     outputStream.write(bytes, 0, read);
                     current += read;
                     long temp = System.currentTimeMillis();
-                    if(temp - lastTime > LISTENER_PERIOD || current == total) {
+                    if (temp - lastTime > LISTENER_PERIOD || current == total) {
                         if (listener != null) {
-                            listener.call(current, total,(int)((current-last)/(temp - lastTime)), file.getName());
+                            listener.call(current, total, (int) ((current - last) / (temp - lastTime)), file.getName());
                         }
-                        lastTime=temp;
-                        last=current;
+                        lastTime = temp;
+                        last = current;
                     }
                 }
                 outputStream.flush();
@@ -246,10 +253,12 @@ public class HttpNet {
         void call(long current, long total, int speed, String keyname);
     }
 
-    public static class Params{
-        private LinkedHashMap<String, String> params =new LinkedHashMap<>();
-        private LinkedHashMap<String, String> headers =new LinkedHashMap<>();
-        private LinkedHashMap<String, String> files =new LinkedHashMap<>();
+    public static class Params {
+        private LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        private LinkedHashMap<String, String> headers = new LinkedHashMap<>();
+        private LinkedHashMap<String, String> files = new LinkedHashMap<>();
+        private ContentType contentType = ContentType.STRING;
+
         public Params add(String key) {
             params.put(key, "");
             return this;
@@ -264,6 +273,7 @@ public class HttpNet {
             params.put(key, object == null ? "" : object.toString());
             return this;
         }
+
         public Params addHeader(String key) {
             headers.put(key, "");
             return this;
@@ -281,6 +291,11 @@ public class HttpNet {
 
         public Params addFile(String key, String value) {
             files.put(key, value + "");
+            return this;
+        }
+
+        public Params setContentType(ContentType contentType) {
+            this.contentType = contentType;
             return this;
         }
 
@@ -309,5 +324,23 @@ public class HttpNet {
             return paramsStr;
         }
 
+        private String toJsonString() {
+            JSONObject jsonObject=new JSONObject();
+            for (Map.Entry<String, String> stringStringEntry : params.entrySet()) {
+                try {
+                    jsonObject.put(stringStringEntry.getKey(),URLEncoder.encode(stringStringEntry.getValue(), "utf-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+    public static enum ContentType {
+        STRING, JSON
     }
 }

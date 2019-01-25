@@ -1,4 +1,4 @@
-package com.part.common.dagger.Component;
+package com.part.common.dagger.component;
 
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;

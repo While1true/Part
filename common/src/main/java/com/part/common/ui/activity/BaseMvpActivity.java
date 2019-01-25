@@ -1,7 +1,7 @@
 package com.part.common.ui.activity;
 
-import com.part.common.dagger.Component.ActivityComponent;
-import com.part.common.dagger.Component.DaggerActivityComponent;
+import com.part.common.dagger.component.ActivityComponent;
+import com.part.common.dagger.component.DaggerActivityComponent;
 import com.part.common.dagger.module.ActivityModule;
 import com.part.common.dagger.module.ContextModule;
 import com.part.common.mvp.IPresenter;

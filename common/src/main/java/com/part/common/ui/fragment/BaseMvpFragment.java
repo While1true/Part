@@ -10,10 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.part.common.R;
-import com.part.common.dagger.Component.ActivityComponent;
-import com.part.common.dagger.Component.DaggerActivityComponent;
+import com.part.common.dagger.component.ActivityComponent;
+import com.part.common.dagger.component.DaggerActivityComponent;
 import com.part.common.dagger.module.ActivityModule;
 import com.part.common.dagger.module.ContextModule;
+import com.part.common.mvp.IPresenter;
 import com.part.common.mvp.IStateView;
 import com.part.common.ui.dialog.LoadingDialog;
 import com.part.common.ui.widget.StateLayout;
@@ -25,7 +26,7 @@ import javax.inject.Inject;
  * <p>
  * life is short , bugs are too many!
  */
-public abstract class BaseMvpFragment<T> extends BaseFragment implements IStateView {
+public abstract class BaseMvpFragment<T extends IPresenter> extends BaseFragment implements IStateView {
     @Inject
     protected T mPresenter;
 
