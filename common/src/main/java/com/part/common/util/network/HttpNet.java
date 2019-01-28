@@ -1,4 +1,4 @@
-﻿package com.part.common.util.network;
+package com.part.common.util.network;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class HttpNet {
             HttpURLConnection connection = (HttpURLConnection) urlx.openConnection();
 
             if (params != null) {
-                for (Map.Entry<String, String> entry : params.headers.entrySet()) {
+                for (Map.Entry<String,String> entry : params.headers.entrySet()) {
                     connection.addRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
@@ -80,7 +80,7 @@ public class HttpNet {
                 connection.setRequestProperty("Content-Type", "application/json");
 
             if (params != null) {
-                for (Map.Entry<String, String> entry : params.headers.entrySet()) {
+                for (Map.Entry<String,String> entry : params.headers.entrySet()) {
                     connection.addRequestProperty(entry.getKey(), entry.getValue());
                 }
                 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
@@ -124,14 +124,14 @@ public class HttpNet {
             connection.setInstanceFollowRedirects(true);
             connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
             if (params != null) {
-                for (Map.Entry<String, String> entry : params.headers.entrySet()) {
+                for (Map.Entry<String,String> entry : params.headers.entrySet()) {
                     connection.addRequestProperty(entry.getKey(), entry.getValue());
                 }
             }
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
             if (params != null) {
-                Set<Map.Entry<String, String>> entries = params.files.entrySet();
-                for (Map.Entry<String, String> entry : entries) {
+                Set<Map.Entry<String,String>> entries = params.files.entrySet();
+                for (Map.Entry<String,String> entry : entries) {
                     String keyname = entry.getKey();
                     File file = new File(entry.getValue());
                     if (file.exists()) {
@@ -165,7 +165,7 @@ public class HttpNet {
                 }
             }
             if (params != null) {
-                for (Map.Entry<String, String> entry : params.params.entrySet()) {
+                for (Map.Entry<String,String> entry : params.params.entrySet()) {
                     outputStream.writeBytes(twoHyphens + boundary + end);
                     outputStream.writeBytes("Content-Disposition: form-data; " + "name=\"" + entry.getKey()
                             + "\"" + end);
@@ -254,10 +254,11 @@ public class HttpNet {
     }
 
     public static class Params {
-        private LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        private LinkedHashMap<String, String> headers = new LinkedHashMap<>();
-        private LinkedHashMap<String, String> files = new LinkedHashMap<>();
+        private LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        private LinkedHashMap<String,String> headers = new LinkedHashMap<>();
+        private LinkedHashMap<String,String> files = new LinkedHashMap<>();
         private ContentType contentType = ContentType.STRING;
+        private String json;
 
         public Params add(String key) {
             params.put(key, "");
@@ -303,10 +304,13 @@ public class HttpNet {
             files.put(key, object == null ? "" : object.toString());
             return this;
         }
-
+        public Params setJson(String json){
+            this.json=json;
+            return this;
+        }
         private String toParamsString() {
             StringBuilder builder = new StringBuilder();
-            for (Map.Entry<String, String> stringStringEntry : params.entrySet()) {
+            for (Map.Entry<String,String> stringStringEntry : params.entrySet()) {
                 builder.append("&");
                 builder.append(stringStringEntry.getKey());
                 builder.append("=");
@@ -325,8 +329,11 @@ public class HttpNet {
         }
 
         private String toJsonString() {
+            if(json!=null){
+                return json;
+            }
             JSONObject jsonObject=new JSONObject();
-            for (Map.Entry<String, String> stringStringEntry : params.entrySet()) {
+            for (Map.Entry<String,String> stringStringEntry : params.entrySet()) {
                 try {
                     jsonObject.put(stringStringEntry.getKey(),URLEncoder.encode(stringStringEntry.getValue(), "utf-8"));
                 } catch (UnsupportedEncodingException e) {

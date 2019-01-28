@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal" />
 
-                    <com.part.common.ui.widget.QuadFrameLayout
+                    <com.part.common.ui.widget.DecorateView.DecorateView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clipChildren="false">
@@ -53,7 +53,7 @@
                             android:paddingRight="40dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_boxing_checked"></android.support.v4.view.ViewPager>
-                    </com.part.common.ui.widget.QuadFrameLayout>
+                    </com.part.common.ui.widget.DecorateView.DecorateView>
 
                 <com.part.common.ui.widget.RotateImage.RotateImageView
                     android:id="@+id/rotateImg"
