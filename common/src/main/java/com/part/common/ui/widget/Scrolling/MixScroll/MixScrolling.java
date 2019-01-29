@@ -240,8 +240,15 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
         }
     }
 
+    /**
+     * 先去找tag、为scroll的
+     * 然后遍历是否有scrollingview的
+     * 然后去最后一个子view
+     */
     private void getViews() {
         int childCount = getChildCount();
+        scrollContent = findViewWithTag("scroll");
+        View scrollTemp=null;
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             if (child instanceof Refreshable) {
@@ -252,16 +259,15 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                     footer = (Refreshable) child;
                     footer.getContentView();
                 }
-            } else if (child instanceof ScrollingView) {
-                scrollContent = child;
             } else {
-                if (scrollContent == null) {
-                    scrollContent = child.findViewWithTag("scroll");
-                }
-                if (scrollContent == null) {
+                scrollTemp=child;
+                if (scrollContent == null && child instanceof ScrollingView) {
                     scrollContent = child;
                 }
             }
+        }
+        if(scrollContent==null){
+            scrollContent=scrollTemp;
         }
         if (scrollContent != null) {
             ViewCompat.setNestedScrollingEnabled(scrollContent, false);
