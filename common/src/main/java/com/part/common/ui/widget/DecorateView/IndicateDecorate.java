@@ -1,47 +1,39 @@
-package com.part.common.ui.widget;
+package com.part.common.ui.widget.DecorateView;
 
-/**
- * @author ckckck  ${data}
- * life is short ,bugs are too many!
- */
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
 import android.util.TypedValue;
-
+import android.view.View;
 
 /**
- * Created by vange on 2017/9/21.
+ * by ckckck 2019/1/29
+ * <p>
+ * life is short , bugs are too many!
  */
+public class IndicateDecorate implements IDecorate {
+    private int indicateColor = 0xffff4070, indicateTextColor = 0xffffffff, indicate, max = 99;
+    private float indicateRadius = 0, indicatesize = 0;
+    private Paint paint;
+    private RectF rect = new RectF();
+    private int W, H;
+    private View view;
 
-public class IndicateImageView extends android.support.v7.widget.AppCompatImageView {
-    int indicateColor=0xffff4070, indicateTextColor=0xffffffff, indicate,max=99;
-    float indicateRadius=dp2px(8), indicatesize=dp2px(9);
-    Paint paint;
-
-    public IndicateImageView(Context context) {
-        this(context, null);
+    @Override
+    public void onSizeChanged(View view, int w, int h, int oldw, int oldh) {
+        W = w;
+        H = h;
+        this.view = view;
+        indicateRadius = dp2px(view, 8);
+        indicatesize = dp2px(view, 9);
     }
 
-    public IndicateImageView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+    public float dp2px(View view, float v) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, view.getResources().getDisplayMetrics());
     }
 
-    public IndicateImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-    }
-    public float dp2px(float v) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
-    }
-
-    RectF rect = new RectF();
     @Override
     public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         /**
          * 等于0不画
          */
@@ -52,12 +44,11 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
             paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         }
         paint.setColor(indicateColor);
-        int width = getWidth();
         /**
          * 大于最大值画一个圆
          */
-        if(indicate>max){
-            canvas.drawCircle(width-indicateRadius,indicateRadius,indicateRadius/2,paint);
+        if (indicate > max) {
+            canvas.drawCircle(W - indicateRadius, indicateRadius, indicateRadius / 2, paint);
             return;
         }
         /**
@@ -66,7 +57,7 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
          */
         paint.setTextSize(indicatesize);
         float v = paint.measureText(indicate + "");
-        rect.set(width - v - indicateRadius * 2, 0, width, indicateRadius * 2);
+        rect.set(W - v - indicateRadius * 2, 0, W, indicateRadius * 2);
         canvas.drawRoundRect(rect, indicateRadius, indicateRadius, paint);
         /**
          * 画数字
@@ -77,10 +68,8 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
          */
         Paint.FontMetrics fm = paint.getFontMetrics();
         float baseLineY = indicateRadius - (fm.ascent - (fm.ascent - fm.descent) / 2);
-        canvas.drawText(indicate + "",width - (indicateRadius+v), baseLineY, paint);
-
+        canvas.drawText(indicate + "", W - (indicateRadius + v), baseLineY, paint);
     }
-
 
     public int getIndicateColor() {
         return indicateColor;
@@ -88,7 +77,8 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
 
     public void setIndicateColor(int indicateColor) {
         this.indicateColor = indicateColor;
-        invalidate();
+        if (view != null) {
+        }
     }
 
     public int getIndicateTextColor() {
@@ -97,7 +87,9 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
 
     public void setIndicateTextColor(int indicateTextColor) {
         this.indicateTextColor = indicateTextColor;
-        invalidate();
+        if (view != null) {
+            view.invalidate();
+        }
     }
 
     public int getIndicate() {
@@ -106,7 +98,9 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
 
     public void setIndicate(int indicate) {
         this.indicate = indicate;
-        invalidate();
+        if (view != null) {
+            view.invalidate();
+        }
     }
 
     public float getIndicateRadius() {
@@ -115,7 +109,9 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
 
     public void setIndicateRadius(float indicateRadius) {
         this.indicateRadius = indicateRadius;
-        invalidate();
+        if (view != null) {
+            view.invalidate();
+        }
     }
 
     public float getIndicatesize() {
@@ -124,7 +120,9 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
 
     public void setIndicatesize(float indicatesize) {
         this.indicatesize = indicatesize;
-        invalidate();
+        if (view != null) {
+            view.invalidate();
+        }
     }
 
     public int getMax() {
@@ -133,6 +131,8 @@ public class IndicateImageView extends android.support.v7.widget.AppCompatImageV
 
     public void setMax(int max) {
         this.max = max;
-        invalidate();
+        if (view != null) {
+            view.invalidate();
+        }
     }
 }

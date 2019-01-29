@@ -252,9 +252,12 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                     footer = (Refreshable) child;
                     footer.getContentView();
                 }
-            } else if (child instanceof ScrollingView || "scroll".equals(child.getTag())) {
+            } else if (child instanceof ScrollingView) {
                 scrollContent = child;
             } else {
+                if (scrollContent == null) {
+                    scrollContent = child.findViewWithTag("scroll");
+                }
                 if (scrollContent == null) {
                     scrollContent = child;
                 }
