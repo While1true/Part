@@ -107,6 +107,9 @@ public class MixScrolling extends Scrolling implements ValueAnimator.AnimatorUpd
                 cancelAnimation();
                 break;
         }
+        if (refreshState == RefreshState.SECONDFLOOR) {
+            return false;
+        }
         return super.onTouchEvent(ev);
     }
     public void closeFloor(){

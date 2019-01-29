@@ -40,6 +40,10 @@ public class FloorTestActivity extends BaseMvpActivity<HelloPresenter> {
     ImageView image;
     @BindView(R2.id.floor)
     FrameLayout floor;
+    @BindView(R2.id.floor2)
+    FrameLayout floor2;
+    @BindView(R2.id.image2)
+    ImageView image2;
     @BindView(R2.id.mixscroll)
     MixScrolling mixScrolling;
 
@@ -52,8 +56,13 @@ public class FloorTestActivity extends BaseMvpActivity<HelloPresenter> {
         ButterKnife.bind(this);
         mixScrolling.setScrollProcess(new RefreshProcess(new FloorHeader(this),new FloorHeader(this,false)));
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) floor.getLayoutParams();
-        layoutParams.topMargin=-getResources().getDisplayMetrics().heightPixels;
+        layoutParams.topMargin=getResources().getDisplayMetrics().heightPixels;
         layoutParams.height=getResources().getDisplayMetrics().heightPixels;
+
+        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) floor2.getLayoutParams();
+        layoutParams2.topMargin=-getResources().getDisplayMetrics().heightPixels;
+        layoutParams2.height=getResources().getDisplayMetrics().heightPixels;
+
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setAdapter(new MixAdapter(50)
                 .addLifeOwener(this)
@@ -75,6 +84,12 @@ public class FloorTestActivity extends BaseMvpActivity<HelloPresenter> {
                     }
                 }));
         image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.showSuccessToast("---zzzzzzzzzzzzz-----");
+            }
+        });
+        image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToastUtil.showSuccessToast("---zzzzzzzzzzzzz-----");

@@ -73,7 +73,6 @@ dependencies {
         //TODO
         implementation project(':basemoudle')
         implementation project(':basemoudle2')
-        implementation project(':aroutmodule')
 
     }
 }

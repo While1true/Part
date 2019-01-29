@@ -14,6 +14,17 @@
             android:src="@drawable/bg"
             android:layout_height="match_parent" />
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/floor2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/image2"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:src="@drawable/bg"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 <android.support.v7.widget.RecyclerView
     android:id="@+id/recyclerview"
     android:layout_width="match_parent"

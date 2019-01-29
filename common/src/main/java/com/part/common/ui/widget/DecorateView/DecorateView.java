@@ -33,7 +33,13 @@ public class DecorateView extends FrameLayout {
         iDecorate.onSizeChanged(this,w, h, oldw, oldh);
     }
 
+    public IDecorate getDecorate() {
+        return iDecorate;
+    }
 
+    public void setDecorate(IDecorate iDecorate) {
+        this.iDecorate = iDecorate;
+    }
 
     @Override
     public void draw(Canvas canvas) {
