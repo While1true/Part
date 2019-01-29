@@ -44,7 +44,7 @@ public class QuadDecorate implements IDecorate {
             path.lineTo(W,-1);
             int y = quarHeight <= 0 ? 6 * H / 7 : quarHeight;
             path.lineTo(W,y);
-            path.quadTo(W / 2, H+H/7, 0, y);
+            path.quadTo(W / 2, 2*H-y, 0, y);
             path.close();
             path.setFillType(Path.FillType.INVERSE_WINDING);
         } else {
