@@ -1,6 +1,7 @@
 package com.part.basemoudle.injection.module;
 
-import com.part.common.mvp.IView;
+
+import com.common.common.mvp.IView;
 
 import dagger.Module;
 import dagger.Provides;

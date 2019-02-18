@@ -32,13 +32,13 @@
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.6">
 
-                <com.part.common.ui.widget.ViewPager.Indicate.Indicate
+                <com.common.common.ui.widget.ViewPager.Indicate.Indicate
                     android:id="@+id/indicate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal" />
 
-                    <com.part.common.ui.widget.DecorateView.DecorateView
+                    <com.common.common.ui.widget.DecorateView.DecorateView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clipChildren="false">
@@ -53,12 +53,12 @@
                             android:paddingRight="40dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_boxing_checked"></android.support.v4.view.ViewPager>
-                    </com.part.common.ui.widget.DecorateView.DecorateView>
+                    </com.common.common.ui.widget.DecorateView.DecorateView>
 
-                <com.part.common.ui.widget.RotateImage.RotateImageView
+                <com.common.common.ui.widget.RotateImage.RotateImageView
                     android:id="@+id/rotateImg"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"></com.part.common.ui.widget.RotateImage.RotateImageView>
+                    android:layout_height="200dp"></com.common.common.ui.widget.RotateImage.RotateImageView>
 
             </LinearLayout>
 

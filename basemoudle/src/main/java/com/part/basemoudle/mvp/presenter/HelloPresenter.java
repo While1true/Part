@@ -1,7 +1,8 @@
 package com.part.basemoudle.mvp.presenter;
 
-import com.part.common.mvp.IPresenter;
-import com.part.common.mvp.IView;
+
+import com.common.common.mvp.IPresenter;
+import com.common.common.mvp.IView;
 
 import javax.inject.Inject;
 

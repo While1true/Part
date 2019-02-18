@@ -11,8 +11,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.OverScroller;
 
-import com.part.common.ui.widget.Scrolling.MixScroll.Base.RefreshState;
-import com.part.common.ui.widget.Scrolling.MixScroll.MixScrolling;
+import com.common.common.ui.widget.Scrolling.MixScroll.Base.RefreshState;
+import com.common.common.ui.widget.Scrolling.MixScroll.MixScrolling;
 
 
 /**

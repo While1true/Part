@@ -1,6 +1,6 @@
 package com.part;
 
-import com.part.common.ui.BaseApp;
+import com.common.common.ui.BaseApp;
 
 /**
  * by ckckck 2019/1/12

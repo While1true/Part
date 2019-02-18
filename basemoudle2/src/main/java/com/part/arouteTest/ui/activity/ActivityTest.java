@@ -7,7 +7,7 @@ import com.part.arouteTest.injection.component.DaggerTestComponent;
 import com.part.arouteTest.injection.module.TestModule;
 import com.part.arouteTest.mvp.presenter.HelloPresenter;
 import com.part.arouteTest.ui.fragment.TestFragment;
-import com.part.common.ui.activity.BaseMvpActivity;
+import com.common.common.ui.activity.BaseMvpActivity;
 
 /**
  * by ckckck 2019/1/10

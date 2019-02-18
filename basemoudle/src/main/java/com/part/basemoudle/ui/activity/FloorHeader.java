@@ -3,10 +3,10 @@ package com.part.basemoudle.ui.activity;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.part.common.ui.widget.Scrolling.MixScroll.Base.SizeUtil;
-import com.part.common.ui.widget.Scrolling.MixScroll.SimpleHeaderFooter;
-import com.part.common.ui.widget.Scrolling.ScrollDirection;
-import com.part.common.util.AppContext;
+import com.common.common.ui.widget.Scrolling.MixScroll.Base.SizeUtil;
+import com.common.common.ui.widget.Scrolling.MixScroll.SimpleHeaderFooter;
+import com.common.common.ui.widget.Scrolling.ScrollDirection;
+import com.common.common.util.AppContext;
 
 /**
  * by ckckck 2019/1/24

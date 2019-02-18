@@ -10,7 +10,7 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.Result;
 import com.liux.android.qrcode.QRCodeScanningActivity;
 import com.liux.android.qrcode.QRCodeScanningFragment;
-import com.part.common.util.ToastUtil;
+import com.common.common.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

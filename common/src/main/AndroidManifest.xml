@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.part.common">
+    package="com.common.common">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <application>
         <receiver
-            android:name=".ui.receiver.JPushReceiver"
+            android:name="com.common.common.ui.receiver.JPushReceiver"
             android:enabled="true"
             android:exported="false"
             tools:node="replace">
